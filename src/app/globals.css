@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────────────────────────────
+   Dentai design tokens
+   Palette: warm cream paper, deep forest ink, clay accent, sage support.
+   Type: Newsreader (display, optical sizes) + Manrope (UI/text).
+   ───────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-cream: #f7f2e8;
+  --color-cream-50: #fcf9f3;
+  --color-cream-100: #f2ebdd;
+  --color-sand: #e6dac5;
+  --color-sand-deep: #d7c8ae;
+  --color-forest: #16332a;
+  --color-forest-700: #22483b;
+  --color-forest-500: #3c6453;
+  --color-sage: #8fa396;
+  --color-sage-soft: #c3cec4;
+  --color-clay: #b5804f;
+  --color-clay-soft: #d8b997;
+  --color-ink: #14211c;
+  --color-muted: #6c7669;
+  --color-line: #ddd3c0;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  --radius-card: 1.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--color-line);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-forest);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-sand);
+    color: var(--color-forest);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Dashed hairline used to separate clinical sections, like a chart rule. */
+  .rule-dotted {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-forest) 22%, transparent) 0 4px,
+      transparent 4px 8px
+    );
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+  }
 }
