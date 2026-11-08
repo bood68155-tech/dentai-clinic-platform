@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, count, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, ilike, lte, or, sql, type SQL } from "drizzle-orm";
 import { cache } from "react";
 
 import { getDb } from "./index";
@@ -18,6 +18,7 @@ import {
   type Clinic,
   type Patient,
   type ToothCondition,
+  type User,
 } from "./schema";
 import {
   DEFAULT_CONSULT_MINUTES,
@@ -419,3 +420,125 @@ export const listTreatmentTypes = cache(async (clinicId: string) => {
     .where(eq(treatmentTypes.clinicId, clinicId))
     .orderBy(asc(treatmentTypes.code));
 });
+
+// ── Auth ───────────────────────────────────────────────────────────────
+
+/** Sign-in lookup. Emails are stored lowercased; compare case-insensitively. */
+export const findUserByEmail = cache(async (email: string): Promise<User | null> => {
+  const db = getDb();
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(sql`lower(${users.email}) = ${email.toLowerCase()}`)
+    .limit(1);
+  return user ?? null;
+});
+
+export type AccountAppointment = {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+  status: string;
+  kind: string;
+  title: string | null;
+  reason: string | null;
+  practitionerName: string | null;
+  operatoryName: string | null;
+  treatmentName: string | null;
+};
+
+export type AccountDashboard = {
+  patient: Patient | null;
+  upcoming: AccountAppointment[];
+  recent: AccountAppointment[];
+  plan: PlanItem[];
+  chartSummary: { recordedAt: Date; findings: number; notes: string | null } | null;
+};
+
+/**
+ * Everything a signed-in patient may see about their own record. The patient
+ * id always comes from the session (`users.patient_id`), never from input.
+ */
+export const getAccountDashboard = cache(
+  async (patientId: string | null): Promise<AccountDashboard> => {
+    const empty: AccountDashboard = {
+      patient: null,
+      upcoming: [],
+      recent: [],
+      plan: [],
+      chartSummary: null,
+    };
+    if (!patientId) return empty;
+
+    const db = getDb();
+    const now = new Date();
+
+    const [patient] = await db
+      .select()
+      .from(patients)
+      .where(eq(patients.id, patientId))
+      .limit(1);
+    if (!patient) return empty;
+
+    const appointmentColumns = {
+      id: appointments.id,
+      startsAt: appointments.startsAt,
+      endsAt: appointments.endsAt,
+      status: appointments.status,
+      kind: appointments.kind,
+      title: appointments.title,
+      reason: appointments.reason,
+      practitionerName: users.fullName,
+      operatoryName: operatories.name,
+      treatmentName: treatmentTypes.name,
+    };
+
+    // One .where() per query: Drizzle's builder types do not allow chaining a
+    // second .where() after the first, so combine every condition with and().
+    const appointmentsFor = (extra: SQL | undefined) =>
+      db
+        .select(appointmentColumns)
+        .from(appointments)
+        .leftJoin(users, eq(appointments.practitionerId, users.id))
+        .leftJoin(operatories, eq(appointments.operatoryId, operatories.id))
+        .leftJoin(treatmentTypes, eq(appointments.treatmentTypeId, treatmentTypes.id))
+        .where(and(eq(appointments.patientId, patientId), extra));
+
+    const [upcoming, recent, plan] = await Promise.all([
+      appointmentsFor(
+        and(
+          gte(appointments.startsAt, now),
+          sql`${appointments.status} not in ('completed', 'cancelled', 'no_show')`,
+        ),
+      )
+        .orderBy(asc(appointments.startsAt))
+        .limit(10),
+      appointmentsFor(eq(appointments.status, "completed"))
+        .orderBy(desc(appointments.startsAt))
+        .limit(5),
+      getPatientPlan(patientId),
+    ]);
+
+    const [latestChart] = await db
+      .select()
+      .from(dentalCharts)
+      .where(eq(dentalCharts.patientId, patientId))
+      .orderBy(desc(dentalCharts.recordedAt))
+      .limit(1);
+
+    let chartSummary: AccountDashboard["chartSummary"] = null;
+    if (latestChart) {
+      const [findingsRow] = await db
+        .select({ n: count() })
+        .from(toothRecords)
+        .where(eq(toothRecords.chartId, latestChart.id));
+      chartSummary = {
+        recordedAt: latestChart.recordedAt,
+        findings: Number(findingsRow?.n ?? 0),
+        notes: latestChart.notes,
+      };
+    }
+
+    return { patient, upcoming, recent, plan, chartSummary };
+  },
+);

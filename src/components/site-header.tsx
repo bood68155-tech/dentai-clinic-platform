@@ -35,13 +35,21 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        <Link
-          href="/book"
-          className="group inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-[13px] font-medium text-cream transition-colors hover:bg-forest-700"
-        >
-          Book a visit
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className="hidden rounded-full px-4 py-2.5 text-[13px] font-medium text-forest/70 transition-colors hover:bg-forest/5 hover:text-forest sm:inline-flex"
+          >
+            Sign in
+          </Link>
+          <Link
+            href="/book"
+            className="group inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-[13px] font-medium text-cream transition-colors hover:bg-forest-700"
+          >
+            Book a visit
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
       </div>
     </header>
   );

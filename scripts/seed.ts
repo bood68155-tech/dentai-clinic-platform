@@ -12,6 +12,7 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
+import { hashPassword } from "../src/lib/password";
 import * as schema from "../src/db/schema";
 
 config({ path: ".env.local", quiet: true });
@@ -27,6 +28,13 @@ const client = postgres(url, { max: 1, prepare: false, onnotice: () => {} });
 const db = drizzle(client, { schema });
 const CLINIC_SLUG = "dentai-demo";
 const TIMEZONE = "America/New_York";
+
+/**
+ * Demo sign-in password for every seeded account. Documented in the README,
+ * and MUST be changed as soon as real accounts exist — the seed only creates
+ * the fake `dentai-demo` clinic.
+ */
+const DEMO_PASSWORD = "DentaiDemo-2026";
 
 /** Wall-clock time in the clinic's timezone → the matching UTC instant. */
 function zonedDate(day: string, hour: number, minute = 0): Date {
@@ -90,6 +98,9 @@ async function main() {
 
   console.log("· clinic", clinic.name);
 
+  const demoHash = await hashPassword(DEMO_PASSWORD);
+  const now = new Date();
+
   const practitioners = await db
     .insert(schema.users)
     .values([
@@ -101,6 +112,8 @@ async function main() {
         specialty: "Restorative dentistry",
         licenseNumber: "NY-448210",
         color: "#2F6F5E",
+        passwordHash: demoHash,
+        emailVerifiedAt: now,
       },
       {
         clinicId: clinic.id,
@@ -110,6 +123,8 @@ async function main() {
         specialty: "Endodontics",
         licenseNumber: "NY-512907",
         color: "#3E6B8A",
+        passwordHash: demoHash,
+        emailVerifiedAt: now,
       },
       {
         clinicId: clinic.id,
@@ -118,6 +133,8 @@ async function main() {
         role: "hygienist",
         specialty: "Preventive care",
         color: "#B08A4F",
+        passwordHash: demoHash,
+        emailVerifiedAt: now,
       },
       {
         clinicId: clinic.id,
@@ -125,6 +142,8 @@ async function main() {
         email: "lena.ortiz@dentaiclinic.com",
         role: "receptionist",
         color: "#7B6A9B",
+        passwordHash: demoHash,
+        emailVerifiedAt: now,
       },
     ])
     .returning();
@@ -255,6 +274,18 @@ async function main() {
 
   const [amelia, marcus, sofia, tobias, priya, daniel] = patientRows;
   console.log("· patients", patientRows.length);
+
+  // Patient demo account, linked to Amelia's record so `/account` has content.
+  await db.insert(schema.users).values({
+    clinicId: clinic.id,
+    fullName: "Amelia Fontaine",
+    email: "amelia.fontaine@example.com",
+    role: "patient",
+    patientId: amelia.id,
+    passwordHash: demoHash,
+    emailVerifiedAt: now,
+  });
+  console.log("· patient demo account (amelia.fontaine@example.com)");
 
   const day = today();
   const at = (hour: number, minute = 0) => zonedDate(day, hour, minute);
@@ -503,6 +534,11 @@ async function main() {
     treatments: treatments.length,
     patients: patientRows.length,
   });
+
+  console.log("\n  Demo sign-in (password for all accounts):", DEMO_PASSWORD);
+  console.log("    owner    maya.haddad@dentaiclinic.com → /clinic");
+  console.log("    dentist  elias.rahal@dentaiclinic.com → /clinic");
+  console.log("    patient  amelia.fontaine@example.com → /account");
 
   await client.end();
   process.exit(0);

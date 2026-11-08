@@ -37,6 +37,7 @@ export const userRoleEnum = pgEnum("user_role", [
   "hygienist",
   "assistant",
   "receptionist",
+  "patient",
 ]);
 
 export const appointmentStatusEnum = pgEnum("appointment_status", [
@@ -114,6 +115,7 @@ export const users = pgTable(
       .notNull()
       .references(() => clinics.id, { onDelete: "cascade" }),
     fullName: text("full_name").notNull(),
+    /** Stored lowercased so sign-in matches regardless of casing. */
     email: text("email").notNull(),
     role: userRoleEnum("role").notNull().default("dentist"),
     specialty: text("specialty"),
@@ -121,11 +123,56 @@ export const users = pgTable(
     /** Hex colour used to tint this practitioner's agenda column. */
     color: varchar("color", { length: 7 }).notNull().default("#16332A"),
     isActive: boolean("is_active").notNull().default(true),
+    /**
+     * The linked patient record for `role = 'patient'` accounts. Set when a
+     * patient registers with the email already on a practice record, or when
+     * the front desk links an account to a record manually.
+     */
+    patientId: uuid("patient_id").references(() => patients.id, {
+      onDelete: "set null",
+    }),
+    /** scrypt hash in `salt.key` base64url form; null for staff without a login. */
+    passwordHash: text("password_hash"),
+    emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
+    /** Brute-force protection: 5 failures lock the account for 15 minutes. */
+    failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
+    lockedUntil: timestamp("locked_until", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     uniqueIndex("users_email_idx").on(table.email),
     index("users_clinic_idx").on(table.clinicId),
+    index("users_patient_idx").on(table.patientId),
+  ],
+);
+
+/**
+ * Opaque, database-backed sessions. The browser only ever receives the token;
+ * the database stores its SHA-256 hash, so a leaked table row cannot be
+ * replayed as a session. Revoked and expired rows are cleaned up lazily on
+ * read and on sign-in.
+ */
+export const sessions = pgTable(
+  "sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    tokenHash: text("token_hash").notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    /** Set on sign-out or password change; the row is kept for audit. */
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("sessions_token_hash_idx").on(table.tokenHash),
+    index("sessions_user_idx").on(table.userId),
+    index("sessions_expires_idx").on(table.expiresAt),
   ],
 );
 
@@ -358,6 +405,7 @@ export const clinicalNotes = pgTable(
 
 export type Clinic = typeof clinics.$inferSelect;
 export type User = typeof users.$inferSelect;
+export type Session = typeof sessions.$inferSelect;
 export type Operatory = typeof operatories.$inferSelect;
 export type TreatmentType = typeof treatmentTypes.$inferSelect;
 export type Patient = typeof patients.$inferSelect;
@@ -369,6 +417,7 @@ export type NewToothRecord = typeof toothRecords.$inferInsert;
 export type TreatmentPlanItem = typeof treatmentPlanItems.$inferSelect;
 export type ClinicalNote = typeof clinicalNotes.$inferSelect;
 
+export type UserRole = (typeof userRoleEnum.enumValues)[number];
 export type ToothCondition = (typeof toothConditionEnum.enumValues)[number];
 export type ToothStatus = (typeof toothStatusEnum.enumValues)[number];
 export type AppointmentStatus = (typeof appointmentStatusEnum.enumValues)[number];

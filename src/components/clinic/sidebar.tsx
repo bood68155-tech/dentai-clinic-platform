@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ToothMark } from "@/components/icons";
+import type { SessionUser } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -42,7 +44,7 @@ const NAV = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ user }: { user: SessionUser }) {
   const pathname = usePathname();
 
   return (
@@ -116,12 +118,30 @@ export function Sidebar() {
       <div className="border-t border-line p-4">
         <div className="rounded-xl bg-cream px-4 py-3">
           <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-muted">
-            Practice
+            Signed in
           </p>
-          <p className="mt-1 font-display text-[15px] leading-tight text-forest">
-            Dentai Clinic
-          </p>
-          <p className="mt-0.5 text-[11px] text-muted">SoHo · New York</p>
+          <div className="mt-2 flex items-center gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-forest text-[11px] font-semibold text-cream" aria-hidden="true">
+              {user.fullName
+                .split(" ")
+                .map((part) => part.charAt(0))
+                .slice(0, 2)
+                .join("")
+                .toUpperCase()}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-[12.5px] font-medium leading-tight text-forest">
+                {user.fullName}
+              </p>
+              <p className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-clay">
+                {user.role}
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 flex items-center justify-between border-t border-line/80 pt-3">
+            <p className="text-[10.5px] text-muted">Dentai Clinic · SoHo</p>
+            <SignOutButton />
+          </div>
         </div>
       </div>
     </aside>

@@ -13,6 +13,7 @@ import {
   type ToothStatus,
 } from "@/db/schema";
 import { getClinic } from "@/db/queries";
+import { requireStaffUser } from "@/lib/auth";
 import { FDI_TEETH, TOOTH_CONDITIONS } from "@/lib/dental";
 
 export type ActionState = {
@@ -42,6 +43,10 @@ export async function createPatientAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  // Mutating clinical records requires a staff session. The redirect throws,
+  // which is why this runs before any try/catch.
+  await requireStaffUser();
+
   const firstName = text(formData, "firstName");
   const lastName = text(formData, "lastName");
   const email = text(formData, "email");
@@ -112,6 +117,8 @@ export async function recordToothConditionAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireStaffUser();
+
   const patientId = text(formData, "patientId");
   const tooth = text(formData, "tooth");
   const condition = text(formData, "condition") as ToothCondition;

@@ -2,6 +2,8 @@
 
 A dental practice platform with two faces: a calm, editorial **public site** for the
 clinic, and a **clinical workspace** for patients, appointments and dental charts.
+Both are behind a self-hosted, role-based sign-in: patients get their own
+dashboard, while doctors and the clinic team work inside `/clinic`.
 
 Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Drizzle ORM and
 Postgres — designed to deploy to Vercel with a serverless-friendly database.
@@ -61,6 +63,9 @@ instead of crashing.
 | `/clinic/patients/[id]`            | Contact, medical file, treatment plan, clinical notes            |
 | `/clinic/patients/[id]/chart`      | Interactive FDI odontogram + chart history                      |
 | `/clinic/appointments`             | Day agenda with date navigation (`?date=YYYY-MM-DD`)            |
+| `/login`                           | Sign in (all roles) — redirects to the role's home               |
+| `/register`                        | Patient self-registration (links to an existing record by email) |
+| `/account`                         | Patient dashboard: visits, treatment plan, record summary        |
 | `/api/health`                      | Liveness + whether the database is configured                   |
 
 ## Data model
@@ -70,7 +75,8 @@ instead of crashing.
 | Table                  | Purpose                                                          |
 | ---------------------- | ---------------------------------------------------------------- |
 | `clinics`              | Practice profile, timezone, currency, working hours (JSONB)      |
-| `users`                | Clinicians and front desk, with roles and agenda colours         |
+| `users`                | Clinicians, front desk and patients, with roles and agenda colours |
+| `sessions`             | Opaque sign-in sessions (token hashes, expiry, revocation)       |
 | `operatories`          | Treatment rooms / chairs                                         |
 | `treatment_types`      | Procedure catalogue: code, duration, fee, colour                 |
 | `patients`             | Demographics, contact, medical alerts (text[]), insurance        |
@@ -105,6 +111,46 @@ instead of crashing.
 
 Live availability on the landing page comes from `getNextOpening()`, which walks the
 practice opening hours for the next ten days and skips slots that clash with the book.
+
+## Authentication & roles
+
+Sign-in is self-hosted — no third-party auth provider, so credentials never leave
+the practice's own database. Passwords are hashed with Node's built-in **scrypt**
+(memory-hard), and sessions are opaque, database-backed tokens: the browser only
+holds a 32-byte token, the database stores its SHA-256 hash, so a leaked row
+cannot be replayed. Cookies are `httpOnly`, `SameSite=Lax`, `Secure` in
+production, and expire after 30 days with sliding renewal.
+
+| Role                                       | Can reach                                                    | Sees                              |
+| ------------------------------------------ | ------------------------------------------------------------ | --------------------------------- |
+| `patient`                                  | `/account`, `/book`                                          | own visits, plan, chart summary   |
+| `owner`, `dentist`, `hygienist`, `assistant`, `receptionist` | `/clinic` and everything under it | full practice data                |
+
+Guards live in `src/lib/auth.ts` (`requireStaffUser`, `requirePatientUser`,
+`requireOwnerUser`). The clinic layout and the patient layout enforce them at the
+route boundary, and the mutating server actions check the session again — so a
+deep link or a stray form post can never bypass the role check.
+
+Sign-in security details:
+
+- Five failed attempts lock an account for 15 minutes.
+- Unknown emails burn the same scrypt work as real ones, and every failure
+  returns the same message, so accounts cannot be enumerated.
+- Patient registration links to an existing patient record when the same email
+  already exists on exactly one record (for example from an online booking).
+- Staff accounts are provisioned by the clinic (seed script or a future admin
+  screen); only patients can self-register.
+
+### Demo accounts (after `npm run db:seed`)
+
+| Email                                | Password       | Role     | Lands on  |
+| ------------------------------------ | -------------- | -------- | --------- |
+| `maya.haddad@dentaiclinic.com`       | `DentaiDemo-2026` | owner | `/clinic` |
+| `elias.rahal@dentaiclinic.com`       | `DentaiDemo-2026` | dentist | `/clinic` |
+| `amelia.fontaine@example.com`        | `DentaiDemo-2026` | patient | `/account` |
+
+⚠️ Demo credentials only — change them and never seed demo data into a real
+deployment.
 
 ## Scripts
 
@@ -185,7 +231,8 @@ implementation of those ideas.
 
 Natural next steps, all backed by the existing schema:
 
-- Authentication and per-clinic authorisation (roles already modelled on `users`).
+- Email verification, password reset and magic-link sign-in.
+- Admin screens for provisioning staff accounts and linking patient records.
 - Appointment creation, drag-to-reschedule and recall reminders.
 - Invoices and payments, linked to `treatment_plan_items`.
 - Lab cases, insurance plans and document uploads.
