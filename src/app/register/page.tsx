@@ -14,6 +14,10 @@ export const metadata = {
     "Create a Dentai patient account to see your visits and treatment plan.",
 };
 
+/** Reads the session cookie to redirect signed-in users, so it is a blocking
+ * route rather than a prerendered static shell. */
+export const instant = false;
+
 export default async function RegisterPage() {
   const user = await getCurrentUser();
   if (user) redirect(roleHome(user.role));

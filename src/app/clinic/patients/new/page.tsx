@@ -3,10 +3,13 @@ import Link from "next/link";
 import { PatientForm } from "@/components/clinic/patient-form";
 import { PageHeader } from "@/components/clinic/ui";
 import { ChevronLeft } from "@/components/icons";
+import { requireStaffUser } from "@/lib/auth";
 
 export const metadata = { title: "New patient" };
 
-export default function NewPatientPage() {
+export default async function NewPatientPage() {
+  await requireStaffUser();
+
   return (
     <div className="mx-auto w-full max-w-3xl space-y-7">
       <Link

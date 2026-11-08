@@ -14,6 +14,7 @@ import {
 import { ArrowRight } from "@/components/icons";
 import { getAgenda, getClinic, getClinicStats, listPatients } from "@/db/queries";
 import { load } from "@/db/safe";
+import { requireStaffUser } from "@/lib/auth";
 import {
   ageFrom,
   formatDate,
@@ -23,7 +24,11 @@ import {
   todayIn,
 } from "@/lib/utils";
 
-export default function ClinicOverviewPage() {
+export default async function ClinicOverviewPage() {
+  // Guard the page itself, not only the layout: layouts and pages render in
+  // parallel, so the layout's redirect can arrive after this page streamed.
+  await requireStaffUser();
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-7">
       <PageHeader

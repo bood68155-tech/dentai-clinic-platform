@@ -13,6 +13,10 @@ export const metadata = {
   description: "Sign in to your Dentai account.",
 };
 
+/** The page reads the session cookie to skip sign-in for signed-in users, so
+ * it waits on the request instead of prerendering a static shell. */
+export const instant = false;
+
 const ROLE_BLURB: Record<string, string> = {
   owner: "Practice owner",
   dentist: "Doctor",

@@ -15,6 +15,7 @@ import { ChevronLeft } from "@/components/icons";
 import type { Patient } from "@/db/schema";
 import { getClinic, getPatient, getPatientChart } from "@/db/queries";
 import { load } from "@/db/safe";
+import { requireStaffUser } from "@/lib/auth";
 import { formatDate, formatTime } from "@/lib/utils";
 
 export const metadata = { title: "Dental chart" };
@@ -22,6 +23,7 @@ export const metadata = { title: "Dental chart" };
 export default async function PatientChartPage(
   props: PageProps<"/clinic/patients/[id]/chart">,
 ) {
+  await requireStaffUser();
   const { id } = await props.params;
 
   return (

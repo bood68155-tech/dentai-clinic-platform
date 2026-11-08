@@ -11,11 +11,14 @@ import {
 import { PlusIcon } from "@/components/icons";
 import { getClinic, listPatients, type PatientRow } from "@/db/queries";
 import { load } from "@/db/safe";
+import { requireStaffUser } from "@/lib/auth";
 import { ageFrom, formatDate, initials } from "@/lib/utils";
 
-export default function PatientsPage(props: {
+export default async function PatientsPage(props: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  await requireStaffUser();
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-7">
       <PageHeader

@@ -24,9 +24,11 @@ import {
 } from "@/db/queries";
 import { load } from "@/db/safe";
 import type { Patient } from "@/db/schema";
+import { requireStaffUser } from "@/lib/auth";
 import { ageFrom, formatDate, formatMoney } from "@/lib/utils";
 
 export default async function PatientPage(props: PageProps<"/clinic/patients/[id]">) {
+  await requireStaffUser();
   const { id } = await props.params;
 
   return (

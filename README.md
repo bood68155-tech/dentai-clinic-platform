@@ -126,10 +126,22 @@ production, and expire after 30 days with sliding renewal.
 | `patient`                                  | `/account`, `/book`                                          | own visits, plan, chart summary   |
 | `owner`, `dentist`, `hygienist`, `assistant`, `receptionist` | `/clinic` and everything under it | full practice data                |
 
-Guards live in `src/lib/auth.ts` (`requireStaffUser`, `requirePatientUser`,
-`requireOwnerUser`). The clinic layout and the patient layout enforce them at the
-route boundary, and the mutating server actions check the session again — so a
-deep link or a stray form post can never bypass the role check.
+Enforcement is layered, because React renders a layout and its page in parallel —
+the redirect from a layout can arrive *after* the page has already streamed its
+HTML. So:
+
+1. `src/middleware.ts` answers first: no session cookie means a plain `307` to
+   `/login?next=…` before any HTML exists. It carries no authority of its own.
+2. Every clinic page **and** its layout call `requireStaffUser()`; `/account`
+   calls `requirePatientUser()`. The role check happens against the database
+   before the page reads a single row.
+3. Every mutating server action checks the session again, so a stray form post
+   cannot bypass the page guard.
+
+Verified behaviour: guests get `307 → /login`, patients requesting `/clinic` get
+redirected to `/account` with **no practice data in the response**, staff
+requesting `/account` are sent to `/clinic`, and a forged or expired session
+cookie redirects to `/login` without leaking anything.
 
 Sign-in security details:
 

@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, ChevronRight } from "@/components/icons";
 import { getAgenda, getClinic } from "@/db/queries";
 import { load } from "@/db/safe";
+import { requireStaffUser } from "@/lib/auth";
 import {
   cn,
   formatDate,
@@ -25,9 +26,11 @@ export const metadata = { title: "Appointments" };
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-export default function AppointmentsPage(props: {
+export default async function AppointmentsPage(props: {
   searchParams: Promise<{ date?: string }>;
 }) {
+  await requireStaffUser();
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7">
       <PageHeader

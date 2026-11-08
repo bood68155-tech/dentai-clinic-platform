@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ToothMark } from "@/components/icons";
@@ -24,6 +25,9 @@ export default async function AccountLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // The dashboard is per-user: render at request time, never at build time.
+  await connection();
+
   const user = await requirePatientUser();
 
   return (

@@ -106,14 +106,17 @@ export async function revokeAllSessions(userId: string): Promise<void> {
  * forward once a day, and opportunistically sweeps long-dead rows.
  */
 export async function readCurrentUser(): Promise<SessionUser | null> {
-  // No database, no provable session: treat as signed out instead of
-  // throwing, so fresh deployments and login pages still render.
-  if (!isDatabaseConfigured()) return null;
-
-  const db = getDb();
+  // Read the cookie first: it makes the render request-scoped before any
+  // database work happens, so a production build never opens a connection to
+  // prerender a per-user page. No cookie also means no session to look up.
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
+
+  // No database, no provable session: treat as signed out instead of throwing.
+  if (!isDatabaseConfigured()) return null;
+
+  const db = getDb();
 
   const tokenHash = hashToken(token);
   const now = new Date();
