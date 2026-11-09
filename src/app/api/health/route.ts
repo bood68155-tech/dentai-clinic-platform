@@ -1,7 +1,7 @@
 import { connection } from "next/server";
 import { NextResponse } from "next/server";
 
-import { isDatabaseConfigured } from "@/db";
+import { getDatabaseStatus } from "@/db";
 
 export async function GET() {
   // Render per request so the check reflects the running deployment.
@@ -10,7 +10,7 @@ export async function GET() {
   return NextResponse.json({
     status: "ok",
     service: "dentai-clinic-platform",
-    database: isDatabaseConfigured() ? "configured" : "missing",
+    database: getDatabaseStatus(),
     timestamp: new Date().toISOString(),
   });
 }

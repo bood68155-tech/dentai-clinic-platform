@@ -16,9 +16,11 @@ import {
   getClinic,
   getPatient,
   getPatientChart,
+  getPatientImages,
   getPatientNotes,
   getPatientPlan,
   type PatientChart,
+  type PatientImage,
   type PatientNote,
   type PlanItem,
 } from "@/db/queries";
@@ -28,7 +30,7 @@ import { requireStaffUser } from "@/lib/auth";
 import { ageFrom, formatDate, formatMoney } from "@/lib/utils";
 
 export default async function PatientPage(props: PageProps<"/clinic/patients/[id]">) {
-  await requireStaffUser();
+  const user = await requireStaffUser();
   const { id } = await props.params;
 
   return (
@@ -42,7 +44,7 @@ export default async function PatientPage(props: PageProps<"/clinic/patients/[id
       </Link>
 
       <Suspense fallback={<PatientSkeleton />}>
-        <PatientContent patientId={id} />
+        <PatientContent patientId={id} viewerRole={user.role} />
       </Suspense>
     </div>
   );
@@ -54,9 +56,16 @@ type PatientRecord = {
   chart: PatientChart;
   plan: PlanItem[];
   notes: PatientNote[];
+  images: PatientImage[];
 };
 
-async function PatientContent({ patientId }: { patientId: string }) {
+async function PatientContent({
+  patientId,
+  viewerRole,
+}: {
+  patientId: string;
+  viewerRole: string;
+}) {
   const result = await load<{ kind: "no-clinic" } | { kind: "missing" } | ({ kind: "ok" } & PatientRecord)>(
     async () => {
       const clinic = await getClinic();
@@ -65,13 +74,17 @@ async function PatientContent({ patientId }: { patientId: string }) {
       const patient = await getPatient(clinic.id, patientId);
       if (!patient) return { kind: "missing" } as const;
 
-      const [chart, plan, notes] = await Promise.all([
+      const [chart, plan, notes, images] = await Promise.all([
         getPatientChart(patient.id),
         getPatientPlan(patient.id),
         getPatientNotes(patient.id),
+        getPatientImages(clinic.id, patient.id, {
+          role: viewerRole,
+          patientId: null,
+        }),
       ]);
 
-      return { kind: "ok" as const, clinic, patient, chart, plan, notes };
+      return { kind: "ok" as const, clinic, patient, chart, plan, notes, images };
     },
   );
 
@@ -89,7 +102,7 @@ async function PatientContent({ patientId }: { patientId: string }) {
 
   if (result.data.kind === "missing") notFound();
 
-  const { clinic, patient, chart, plan, notes } = result.data;
+  const { clinic, patient, chart, plan, notes, images } = result.data;
 
   const age = ageFrom(patient.dateOfBirth);
   const planTotal = plan.reduce((total, item) => total + Number(item.fee), 0);
@@ -290,6 +303,41 @@ async function PatientContent({ patientId }: { patientId: string }) {
               className="group mt-4 flex items-center justify-between rounded-xl border border-forest/15 px-4 py-2.5 text-[11.5px] font-medium text-forest transition-colors hover:border-forest/35"
             >
               Open dental chart
+              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </Panel>
+
+          <Panel
+            title="Medical imaging"
+            description={`${images.length} X-ray${images.length === 1 ? "" : "s"} and clinical image${images.length === 1 ? "" : "s"} on file`}
+          >
+            {images.length === 0 ? (
+              <p className="text-[12px] leading-relaxed text-muted">
+                No X-rays or clinical photos attached yet.
+              </p>
+            ) : (
+              <ul className="space-y-1.5">
+                {images.slice(0, 3).map((image) => (
+                  <li
+                    key={image.id}
+                    className="flex items-center justify-between gap-3 text-[12px] text-forest/80"
+                  >
+                    <span className="truncate">
+                      {image.tooth ? `Tooth ${image.tooth} · ` : ""}
+                      {image.fileName}
+                    </span>
+                    <span className="shrink-0 text-[10.5px] capitalize text-muted">
+                      {image.category}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link
+              href={`/clinic/patients/${patient.id}/imaging`}
+              className="group mt-4 flex items-center justify-between rounded-xl border border-forest/15 px-4 py-2.5 text-[11.5px] font-medium text-forest transition-colors hover:border-forest/35"
+            >
+              Open imaging library
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </Panel>

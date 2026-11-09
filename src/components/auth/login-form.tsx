@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useActionState } from "react";
 
-import { initialAuthState, signInAction } from "@/app/auth/actions";
+import { signInAction } from "@/app/auth/actions";
+import { initialAuthState } from "@/lib/form-state";
 
 const inputClass =
   "w-full rounded-xl border border-line bg-cream-50 px-3.5 py-2.5 text-[13px] text-forest placeholder:text-muted/50 transition-colors focus:border-forest/40 focus:outline-none";

@@ -12,18 +12,13 @@ import {
   type ToothCondition,
   type ToothStatus,
 } from "@/db/schema";
-import { getClinic } from "@/db/queries";
+import { uploadImage } from "@/db/mutations";
+import { getClinic, getPatient } from "@/db/queries";
+import type { ImagingCategory } from "@/db/schema";
 import { requireStaffUser } from "@/lib/auth";
 import { FDI_TEETH, TOOTH_CONDITIONS } from "@/lib/dental";
-
-export type ActionState = {
-  status: "idle" | "error" | "success";
-  message?: string;
-  errors?: Record<string, string>;
-  resetKey?: number;
-};
-
-export const initialActionState: ActionState = { status: "idle" };
+import type { ActionState, ImageUploadState } from "@/lib/form-state";
+import { IMAGING_CATEGORIES } from "@/lib/imaging";
 
 function text(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -198,4 +193,70 @@ export async function recordToothConditionAction(
       message: "Could not save the finding. Check the database connection and try again.",
     };
   }
+}
+
+/** Attach an X-ray or clinical photo to a patient record. Staff only. */
+export async function uploadImageAction(
+  _prevState: ImageUploadState,
+  formData: FormData,
+): Promise<ImageUploadState> {
+  const user = await requireStaffUser();
+
+  const patientId = text(formData, "patientId");
+  const category = text(formData, "category") as ImagingCategory;
+  const tooth = optionalText(formData, "tooth");
+  const description = optionalText(formData, "description");
+  const chartId = optionalText(formData, "chartId");
+  const treatmentPlanItemId = optionalText(formData, "planItemId");
+  const file = formData.get("file");
+
+  if (!patientId) return { status: "error", message: "Missing patient." };
+  if (!(file instanceof File) || file.size === 0) {
+    return { status: "error", message: "Choose an image to attach." };
+  }
+  if (!IMAGING_CATEGORIES.includes(category)) {
+    return { status: "error", message: "Choose a valid image category." };
+  }
+  if (tooth && !/^\d{1,2}$/.test(tooth)) {
+    return { status: "error", message: "Use a two-digit FDI tooth number, for example 11 or 46." };
+  }
+  if (description && description.length > 1000) {
+    return { status: "error", message: "Keep the description under 1000 characters." };
+  }
+
+  try {
+    const clinic = await getClinic();
+    if (!clinic) {
+      return { status: "error", message: "No clinic found. Seed the practice and try again." };
+    }
+
+    const patient = await getPatient(clinic.id, patientId);
+    if (!patient) {
+      return { status: "error", message: "Patient not found." };
+    }
+
+    await uploadImage(getDb(), user.id, clinic.id, {
+      patientId: patient.id,
+      file,
+      category,
+      tooth: tooth || null,
+      description: description || null,
+      chartId: chartId || null,
+      treatmentPlanItemId: treatmentPlanItemId || null,
+    });
+  } catch (error) {
+    console.error("uploadImageAction failed", error);
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Could not attach the image. Check the storage path and try again.",
+    };
+  }
+
+  revalidatePath(`/clinic/patients/${patientId}`);
+  revalidatePath(`/clinic/patients/${patientId}/imaging`);
+
+  return { status: "success", message: "Image attached to the patient record." };
 }

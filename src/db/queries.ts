@@ -9,6 +9,9 @@ import {
   clinicalNotes,
   clinics,
   dentalCharts,
+  financialEvents,
+  imageAccess,
+  images,
   operatories,
   patients,
   toothRecords,
@@ -29,12 +32,80 @@ import {
   zonedDateTime,
 } from "../lib/time";
 
-/**
- * Reads used by the clinic dashboard.
- *
- * Each function is wrapped in React's `cache()` so a page that needs the clinic
- * plus a patient plus an agenda only issues one query per table per request.
- */
+export type AccountDashboard = {
+  patient: Patient | null;
+  upcoming: AccountAppointment[];
+  recent: AccountAppointment[];
+  plan: PlanItem[];
+  chartSummary: { recordedAt: Date; findings: number; notes: string | null } | null;
+  balance: string;
+  balancePeriodLabel: string;
+  images: PatientImage[];
+};
+
+export type PatientImage = {
+  id: string;
+  category: string;
+  fileKey: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  tooth: string | null;
+  description: string | null;
+  uploadedAt: Date;
+  uploadedByName: string | null;
+  canView: boolean;
+};
+
+export const getPatientImages = cache(
+  async (
+    clinicId: string,
+    patientId: string,
+    viewer: { role: string; patientId: string | null },
+  ): Promise<PatientImage[]> => {
+    const db = getDb();
+    const isStaff = [
+      "owner",
+      "dentist",
+      "hygienist",
+      "assistant",
+      "receptionist",
+    ].includes(viewer.role);
+
+    // A patient may read their own record; anyone else needs a staff role.
+    if (!isStaff && viewer.patientId !== patientId) return [];
+
+    const rows = await db
+      .select({
+        id: images.id,
+        category: images.category,
+        fileKey: images.fileKey,
+        fileName: images.fileName,
+        mimeType: images.mimeType,
+        sizeBytes: images.sizeBytes,
+        tooth: images.tooth,
+        description: images.description,
+        uploadedAt: images.uploadedAt,
+        uploadedByName: users.fullName,
+      })
+      .from(images)
+      .leftJoin(users, eq(images.uploadedById, users.id))
+      .where(and(eq(images.clinicId, clinicId), eq(images.patientId, patientId)))
+      .orderBy(desc(images.uploadedAt));
+
+    if (isStaff) return rows.map((row) => ({ ...row, canView: true }));
+
+    const shared = await db
+      .select({ imageId: imageAccess.imageId })
+      .from(imageAccess)
+      .where(eq(imageAccess.patientId, patientId));
+    const sharedIds = new Set(shared.map((row) => row.imageId));
+
+    return rows.map((row) => ({ ...row, canView: sharedIds.has(row.id) }));
+  },
+);
+
+// ── Clinic queries restored for the rest of the app ──────────────────────────
 
 export const getClinic = cache(async (): Promise<Clinic | null> => {
   const db = getDb();
@@ -335,10 +406,6 @@ export const getClinicStats = cache(
 
 export type NextOpening = { day: string; time: string; startsAt: Date } | null;
 
-/**
- * First free consultation slot in the next ten days, based on the practice
- * opening hours and the appointments already in the book.
- */
 export const getNextOpening = cache(
   async (clinicId: string, timeZone: string, now: Date = new Date()): Promise<NextOpening> => {
     const db = getDb();
@@ -421,9 +488,6 @@ export const listTreatmentTypes = cache(async (clinicId: string) => {
     .orderBy(asc(treatmentTypes.code));
 });
 
-// ── Auth ───────────────────────────────────────────────────────────────
-
-/** Sign-in lookup. Emails are stored lowercased; compare case-insensitively. */
 export const findUserByEmail = cache(async (email: string): Promise<User | null> => {
   const db = getDb();
   const [user] = await db
@@ -447,18 +511,6 @@ export type AccountAppointment = {
   treatmentName: string | null;
 };
 
-export type AccountDashboard = {
-  patient: Patient | null;
-  upcoming: AccountAppointment[];
-  recent: AccountAppointment[];
-  plan: PlanItem[];
-  chartSummary: { recordedAt: Date; findings: number; notes: string | null } | null;
-};
-
-/**
- * Everything a signed-in patient may see about their own record. The patient
- * id always comes from the session (`users.patient_id`), never from input.
- */
 export const getAccountDashboard = cache(
   async (patientId: string | null): Promise<AccountDashboard> => {
     const empty: AccountDashboard = {
@@ -467,6 +519,9 @@ export const getAccountDashboard = cache(
       recent: [],
       plan: [],
       chartSummary: null,
+      balance: "0",
+      balancePeriodLabel: "Today",
+      images: [],
     };
     if (!patientId) return empty;
 
@@ -493,8 +548,6 @@ export const getAccountDashboard = cache(
       treatmentName: treatmentTypes.name,
     };
 
-    // One .where() per query: Drizzle's builder types do not allow chaining a
-    // second .where() after the first, so combine every condition with and().
     const appointmentsFor = (extra: SQL | undefined) =>
       db
         .select(appointmentColumns)
@@ -539,6 +592,204 @@ export const getAccountDashboard = cache(
       };
     }
 
-    return { patient, upcoming, recent, plan, chartSummary };
+    const today = new Date().toISOString().slice(0, 10);
+    const summary = await getPatientFinancialSummary(patientId, today, today);
+    const images = await getPatientImages(patient.clinicId, patientId, {
+      role: "patient",
+      patientId,
+    });
+
+    return {
+      patient,
+      upcoming,
+      recent,
+      plan,
+      chartSummary,
+      balance: summary.balance,
+      balancePeriodLabel: summary.periodLabel,
+      images,
+    };
+  },
+);
+
+export function financialSign(category: string): number {
+  return ["payment", "insurance_payment", "appointment_fee"].includes(category)
+    ? 1
+    : -1;
+}
+
+export type FinancialSummary = {
+  period: string;
+  periodLabel: string;
+  income: string;
+  expense: string;
+  net: string;
+  transactionCount: number;
+};
+
+export const getFinancialSummary = cache(
+  async (
+    clinicId: string,
+    start: string,
+    end: string,
+  ): Promise<FinancialSummary> => {
+    const db = getDb();
+
+    const rows = await db
+      .select({
+        category: financialEvents.category,
+        amount: financialEvents.amount,
+      })
+      .from(financialEvents)
+      .where(
+        and(
+          eq(financialEvents.clinicId, clinicId),
+          sql`${financialEvents.createdAt} >= ${start}::date`,
+          sql`${financialEvents.createdAt} < (${end}::date + interval '1 day')`,
+        ),
+      )
+      .orderBy(asc(financialEvents.createdAt));
+
+    let income = 0;
+    let expense = 0;
+    for (const row of rows) {
+      const amount = Number(row.amount);
+      if (financialSign(row.category) > 0) income += amount;
+      else expense += amount;
+    }
+
+    const net = income + expense;
+    const label = start === end
+      ? new Date(start).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+      : `${new Date(start).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+        })} – ${new Date(end).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}`;
+
+    const [countRow] = await db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(financialEvents)
+      .where(
+        and(
+          eq(financialEvents.clinicId, clinicId),
+          sql`${financialEvents.createdAt} >= ${start}::date`,
+          sql`${financialEvents.createdAt} < (${end}::date + interval '1 day')`,
+        ),
+      );
+
+    return {
+      period: start,
+      periodLabel: label,
+      income: String(income),
+      expense: String(expense),
+      net: String(net),
+      transactionCount: countRow?.n ?? 0,
+    };
+  },
+);
+
+export type FinancialEventRow = {
+  id: string;
+  category: string;
+  memoType: string | null;
+  amount: string;
+  reference: string | null;
+  notes: string | null;
+  createdAt: Date;
+  enteredByName: string | null;
+  patientName: string | null;
+  appointmentTitle: string | null;
+  treatmentName: string | null;
+};
+
+export const getFinancialEvents = cache(
+  async (
+    clinicId: string,
+    start: string,
+    end: string,
+    limit = 200,
+  ): Promise<FinancialEventRow[]> => {
+    const db = getDb();
+    return db
+      .select({
+        id: financialEvents.id,
+        category: financialEvents.category,
+        memoType: financialEvents.memoType,
+        amount: financialEvents.amount,
+        reference: financialEvents.reference,
+        notes: financialEvents.notes,
+        createdAt: financialEvents.createdAt,
+        enteredByName: users.fullName,
+        patientName: patients.firstName,
+        appointmentTitle: appointments.title,
+        treatmentName: treatmentTypes.name,
+      })
+      .from(financialEvents)
+      .leftJoin(patients, eq(financialEvents.patientId, patients.id))
+      .leftJoin(appointments, eq(financialEvents.appointmentId, appointments.id))
+      .leftJoin(treatmentTypes, eq(financialEvents.treatmentPlanItemId, treatmentTypes.id))
+      .leftJoin(users, eq(financialEvents.enteredById, users.id))
+      .where(
+        and(
+          eq(financialEvents.clinicId, clinicId),
+          sql`${financialEvents.createdAt} >= ${start}::date`,
+          sql`${financialEvents.createdAt} < (${end}::date + interval '1 day')`,
+        ),
+      )
+      .orderBy(desc(financialEvents.createdAt))
+      .limit(limit);
+  },
+);
+
+export const getPatientFinancialSummary = cache(
+  async (
+    patientId: string,
+    start: string,
+    end: string,
+  ): Promise<{ balance: string; periodLabel: string }> => {
+    const db = getDb();
+    const rows = await db
+      .select({
+        amount: financialEvents.amount,
+        category: financialEvents.category,
+      })
+      .from(financialEvents)
+      .where(
+        and(
+          eq(financialEvents.patientId, patientId),
+          sql`${financialEvents.createdAt} >= ${start}::date`,
+          sql`${financialEvents.createdAt} < (${end}::date + interval '1 day')`,
+        ),
+      );
+
+    let balance = 0;
+    for (const row of rows) {
+      balance += Number(row.amount) * financialSign(row.category);
+    }
+
+    const label = start === end
+      ? new Date(start).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+      : `${new Date(start).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+        })} – ${new Date(end).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}`;
+
+    return { balance: String(balance), periodLabel: label };
   },
 );

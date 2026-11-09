@@ -7,16 +7,9 @@ import { getDb } from "@/db";
 import { patients, users } from "@/db/schema";
 import { findUserByEmail, getClinic } from "@/db/queries";
 import { roleHome } from "@/lib/auth";
+import type { AuthState } from "@/lib/form-state";
 import { dummyPasswordCheck, hashPassword, verifyPassword } from "@/lib/password";
 import { createSession, destroyCurrentSession } from "@/lib/session";
-
-export type AuthState = {
-  status: "idle" | "error";
-  message?: string;
-  errors?: Record<string, string>;
-};
-
-export const initialAuthState: AuthState = { status: "idle" };
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -75,7 +68,6 @@ export async function signInAction(
 
   const passwordOk = await verifyPassword(password, user.passwordHash);
 
-  const db = getDb();
   if (!passwordOk) {
     const attempts = user.failedLoginAttempts + 1;
     const lockedUntil =
@@ -83,26 +75,47 @@ export async function signInAction(
         ? new Date(now.getTime() + LOCKOUT_MINUTES * 60_000)
         : null;
 
-    await db
-      .update(users)
-      .set({
-        failedLoginAttempts: attempts,
-        lockedUntil,
-        updatedAt: now,
-      })
-      .where(eq(users.id, user.id));
+    try {
+      const db = getDb();
+      await db
+        .update(users)
+        .set({
+          failedLoginAttempts: attempts,
+          lockedUntil,
+          updatedAt: now,
+        })
+        .where(eq(users.id, user.id));
+    } catch (error) {
+      console.error("signInAction failed-attempt update failed", error);
+      return {
+        status: "error",
+        message: "Sign-in is unavailable right now. Please try again in a moment.",
+      };
+    }
 
     return { status: "error", message: GENERIC_LOGIN_ERROR };
   }
 
-  // Success: clear the failure counters, then open a session.
-  await db
-    .update(users)
-    .set({ failedLoginAttempts: 0, lockedUntil: null, updatedAt: now })
-    .where(eq(users.id, user.id));
+  // Success: clear the failure counters, then open a session. Both calls live
+  // inside the try so a missing/malformed DATABASE_URL returns a form error
+  // instead of crashing the action with a 500.
+  try {
+    const db = getDb();
+    await db
+      .update(users)
+      .set({ failedLoginAttempts: 0, lockedUntil: null, updatedAt: now })
+      .where(eq(users.id, user.id));
 
-  await createSession(user.id);
+    await createSession(user.id);
+  } catch (error) {
+    console.error("signInAction session failed", error);
+    return {
+      status: "error",
+      message: "Sign-in could not be completed right now. Please try again.",
+    };
+  }
 
+  // Must stay outside the try/catch: redirect() signals by throwing.
   redirect(roleHome(user.role));
 }
 
@@ -136,9 +149,9 @@ export async function registerPatientAction(
     };
   }
 
-  const db = getDb();
-
   try {
+    const db = getDb();
+
     if (await findUserByEmail(email)) {
       return {
         status: "error",

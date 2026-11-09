@@ -2,7 +2,8 @@
 
 import { useActionState, useState } from "react";
 
-import { initialActionState, recordToothConditionAction } from "@/app/actions";
+import { recordToothConditionAction } from "@/app/actions";
+import { initialActionState } from "@/lib/form-state";
 import type { ToothCondition } from "@/db/schema";
 import {
   FDI_LOWER_LEFT,

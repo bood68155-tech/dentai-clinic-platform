@@ -14,7 +14,7 @@ export function PatientHeader({
   patient: Patient;
   clinicName: string;
   timeZone: string;
-  active: "overview" | "chart";
+  active: "overview" | "chart" | "imaging";
 }) {
   const age = ageFrom(patient.dateOfBirth);
 
@@ -24,6 +24,11 @@ export function PatientHeader({
       key: "chart" as const,
       label: "Dental chart",
       href: `/clinic/patients/${patient.id}/chart`,
+    },
+    {
+      key: "imaging" as const,
+      label: "Imaging",
+      href: `/clinic/patients/${patient.id}/imaging`,
     },
   ];
 

@@ -5,21 +5,8 @@ import { revalidatePath } from "next/cache";
 import { getDb } from "@/db";
 import { requestAppointment } from "@/db/mutations";
 import { getClinic } from "@/db/queries";
+import type { BookingState } from "@/lib/form-state";
 import { formatDate, formatTime } from "@/lib/utils";
-
-export type BookingState = {
-  status: "idle" | "error" | "success";
-  message?: string;
-  errors?: Record<string, string>;
-  confirmation?: {
-    patientName: string;
-    date: string;
-    time: string;
-    treatment: string;
-  };
-};
-
-export const initialBookingState: BookingState = { status: "idle" };
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^\d{2}:\d{2}$/;

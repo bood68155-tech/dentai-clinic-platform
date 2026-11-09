@@ -20,6 +20,9 @@
 # production
 /build
 
+# uploaded clinical images
+/private
+
 # misc
 .DS_Store
 *.pem

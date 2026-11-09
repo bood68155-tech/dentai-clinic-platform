@@ -77,15 +77,21 @@ export async function createSession(userId: string): Promise<void> {
 
 /** Revoke the current session (if any) and clear the cookie. */
 export async function destroyCurrentSession(): Promise<void> {
-  const db = getDb();
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
 
-  if (token) {
-    await db
-      .update(sessions)
-      .set({ revokedAt: new Date() })
-      .where(eq(sessions.tokenHash, hashToken(token)));
+  if (token && isDatabaseConfigured()) {
+    try {
+      const db = getDb();
+      await db
+        .update(sessions)
+        .set({ revokedAt: new Date() })
+        .where(eq(sessions.tokenHash, hashToken(token)));
+    } catch (error) {
+      // Signing out must still clear the cookie when the database is down or
+      // misconfigured; the server-side row expires on its own.
+      console.error("destroyCurrentSession failed", error);
+    }
   }
 
   store.delete(SESSION_COOKIE_NAME);
@@ -121,45 +127,52 @@ export async function readCurrentUser(): Promise<SessionUser | null> {
   const tokenHash = hashToken(token);
   const now = new Date();
 
-  const [row] = await db
-    .select({ session: sessions, user: users })
-    .from(sessions)
-    .innerJoin(users, eq(sessions.userId, users.id))
-    .where(eq(sessions.tokenHash, tokenHash))
-    .limit(1);
+  try {
+    const [row] = await db
+      .select({ session: sessions, user: users })
+      .from(sessions)
+      .innerJoin(users, eq(sessions.userId, users.id))
+      .where(eq(sessions.tokenHash, tokenHash))
+      .limit(1);
 
-  if (!row || row.session.revokedAt || row.session.expiresAt <= now || !row.user.isActive) {
+    if (!row || row.session.revokedAt || row.session.expiresAt <= now || !row.user.isActive) {
+      return null;
+    }
+
+    const session = row.session;
+
+    // Sliding renewal: first use of the day pushes expiry out by a full TTL.
+    if (now.getTime() - session.lastSeenAt.getTime() > RENEW_AFTER_MS) {
+      await db
+        .update(sessions)
+        .set({
+          lastSeenAt: now,
+          expiresAt: new Date(now.getTime() + SESSION_TTL_MS),
+        })
+        .where(eq(sessions.id, session.id));
+
+      store.set(
+        SESSION_COOKIE_NAME,
+        token,
+        cookieOptions(SESSION_TTL_MS / 1000),
+      );
+
+      // Best-effort cleanup of rows that died long ago. Fire-and-forget is
+      // wrong in server actions, so just await it — it is one indexed delete.
+      await db
+        .delete(sessions)
+        .where(
+          sql`(${sessions.expiresAt} < ${new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)} or ${sessions.revokedAt} is not null and ${sessions.revokedAt} < ${new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)})`,
+        )
+        .catch(() => undefined);
+    }
+
+    const { id, clinicId, fullName, email, role, patientId } = row.user;
+    return { id, clinicId, fullName, email, role, patientId };
+  } catch (error) {
+    // A transient database outage must not turn every page into a 500. Treat
+    // the session as unreadable; the next request can recover.
+    console.error("readCurrentUser failed", error);
     return null;
   }
-
-  const session = row.session;
-
-  // Sliding renewal: first use of the day pushes expiry out by a full TTL.
-  if (now.getTime() - session.lastSeenAt.getTime() > RENEW_AFTER_MS) {
-    await db
-      .update(sessions)
-      .set({
-        lastSeenAt: now,
-        expiresAt: new Date(now.getTime() + SESSION_TTL_MS),
-      })
-      .where(eq(sessions.id, session.id));
-
-    store.set(
-      SESSION_COOKIE_NAME,
-      token,
-      cookieOptions(SESSION_TTL_MS / 1000),
-    );
-
-    // Best-effort cleanup of rows that died long ago. Fire-and-forget is
-    // wrong in server actions, so just await it — it is one indexed delete.
-    await db
-      .delete(sessions)
-      .where(
-        sql`(${sessions.expiresAt} < ${new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)} or ${sessions.revokedAt} is not null and ${sessions.revokedAt} < ${new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)})`,
-      )
-      .catch(() => undefined);
-  }
-
-  const { id, clinicId, fullName, email, role, patientId } = row.user;
-  return { id, clinicId, fullName, email, role, patientId };
 }

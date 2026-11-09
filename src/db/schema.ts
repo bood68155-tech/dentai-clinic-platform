@@ -353,7 +353,87 @@ export const toothRecords = pgTable(
   ],
 );
 
+// ── Imaging / clinical files ───────────────────────────────────────────
+export const imagingCategoriesEnum = pgEnum("imaging_category", [
+  "panoramic",
+  "periapical",
+  "bitewing",
+  "occlusal",
+  "cbct",
+  "extraoral",
+  "intraoral",
+  "photo",
+  "lab",
+  "document",
+]);
+
+export const images = pgTable(
+  "images",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clinicId: uuid("clinic_id")
+      .notNull()
+      .references(() => clinics.id, { onDelete: "cascade" }),
+    patientId: uuid("patient_id")
+      .notNull()
+      .references(() => patients.id, { onDelete: "cascade" }),
+    category: imagingCategoriesEnum("category").notNull(),
+    fileKey: text("file_key").notNull(),
+    fileName: text("file_name").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    /** SHA-256 of the stored file bytes; keeps the record honest if storage is lost. */
+    checksum: text("checksum").notNull(),
+    tooth: varchar("tooth", { length: 3 }),
+    chartId: uuid("chart_id").references(() => dentalCharts.id, { onDelete: "set null" }),
+    treatmentPlanItemId: uuid("treatment_plan_item_id").references(() => treatmentPlanItems.id, {
+      onDelete: "set null",
+    }),
+    appointmentId: uuid("appointment_id").references(() => appointments.id, { onDelete: "set null" }),
+    description: text("description"),
+    uploadedById: uuid("uploaded_by_id").references(() => users.id, { onDelete: "set null" }),
+    uploadedAt: timestamp("uploaded_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("images_patient_idx").on(table.patientId, table.uploadedAt),
+    index("images_clinic_idx").on(table.clinicId),
+    index("images_chart_idx").on(table.chartId),
+    index("images_plan_item_idx").on(table.treatmentPlanItemId),
+  ],
+);
+
+export const imageAccess = pgTable(
+  "image_access",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    patientId: uuid("patient_id")
+      .notNull()
+      .references(() => patients.id, { onDelete: "cascade" }),
+    imageId: uuid("image_id")
+      .notNull()
+      .references(() => images.id, { onDelete: "cascade" }),
+    grantedAt: timestamp("granted_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("image_access_patient_image_idx").on(table.patientId, table.imageId),
+    index("image_access_patient_idx").on(table.patientId),
+  ],
+);
+
 // ── Treatment planning & notes ─────────────────────────────────────────
+export const passwordResets = pgTable(
+  "password_resets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    used: boolean("used").notNull().default(false),
+  },
+  (table) => [uniqueIndex("password_resets_id_idx").on(table.id)],
+);
 
 export const treatmentPlanItems = pgTable(
   "treatment_plan_items",
@@ -401,9 +481,62 @@ export const clinicalNotes = pgTable(
   (table) => [index("clinical_notes_patient_idx").on(table.patientId, table.notedAt)],
 );
 
-// ── Inferred types ─────────────────────────────────────────────────────
+// ── Financial ledger ────────────────────────────────────────────────────
+export const financialCategoriesEnum = pgEnum("financial_category", [
+  "adjustment",
+  "appointment_fee",
+  "insurance_payment",
+  "payment",
+  "refund",
+  "supply",
+  "lab",
+  "write_off",
+]);
+export const financialMemoTypesEnum = pgEnum("financial_memo_type", [
+  "check",
+  "card",
+  "cash",
+  "transfer",
+  "insurance",
+  "note",
+]);
 
+export const financialEvents = pgTable(
+  "financial_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clinicId: uuid("clinic_id")
+      .notNull()
+      .references(() => clinics.id, { onDelete: "cascade" }),
+    patientId: uuid("patient_id").references(() => patients.id, { onDelete: "set null" }),
+    appointmentId: uuid("appointment_id").references(() => appointments.id, { onDelete: "set null" }),
+    treatmentPlanItemId: uuid("treatment_plan_item_id").references(() => treatmentPlanItems.id, {
+      onDelete: "set null",
+    }),
+    category: financialCategoriesEnum("category").notNull(),
+    memoType: financialMemoTypesEnum("memo_type"),
+    amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+    /** Human-readable ticket, invoice or batch label. */
+    reference: text("reference"),
+    notes: text("notes"),
+    enteredById: uuid("entered_by_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("financial_events_clinic_date_idx").on(table.clinicId, table.createdAt),
+    index("financial_events_patient_idx").on(table.patientId, table.createdAt),
+    index("financial_events_appointment_idx").on(table.appointmentId),
+  ],
+);// ── Inferred types ─────────────────────────────────────────────────────
 export type Clinic = typeof clinics.$inferSelect;
+export type Image = typeof images.$inferSelect;
+export type NewImage = typeof images.$inferInsert;
+export type ImageAccess = typeof imageAccess.$inferSelect;
+export type FinancialEvent = typeof financialEvents.$inferSelect;
+export type FinancialCategory = (typeof financialCategoriesEnum.enumValues)[number];
+export type FinancialMemoType = (typeof financialMemoTypesEnum.enumValues)[number];
+export type ImagingCategory = (typeof imagingCategoriesEnum.enumValues)[number];
+export type PasswordReset = typeof passwordResets.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type Operatory = typeof operatories.$inferSelect;

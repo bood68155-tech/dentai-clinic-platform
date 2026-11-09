@@ -76,6 +76,45 @@ export function PlusIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ImageIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect x={3} y={3} width={18} height={18} rx={2} ry={2} />
+      <circle cx={8.5} cy={8.5} r={1.5} />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+  );
+}
+
+export function ReceiptIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M4 2h16v4H4z" />
+      <path d="M4 10h16v10H4z" />
+      <path d="M8 14h2" />
+      <path d="M12 14h2" />
+      <path d="M16 14h2" />
+      <path d="M8 18h8" />
+    </svg>
+  );
+}
+
 export function CheckIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>

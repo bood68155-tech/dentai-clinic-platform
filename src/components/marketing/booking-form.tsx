@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useActionState } from "react";
 
-import { bookAppointmentAction, initialBookingState } from "@/app/book/actions";
+import { bookAppointmentAction } from "@/app/book/actions";
+import { initialBookingState } from "@/lib/form-state";
 import { ArrowRight, CheckIcon } from "@/components/icons";
 import { BOOKABLE_TIMES } from "@/lib/time";
 import { cn } from "@/lib/utils";
