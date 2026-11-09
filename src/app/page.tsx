@@ -1,4 +1,5 @@
 import { Approach } from "@/components/marketing/approach";
+import { CareBand } from "@/components/marketing/care-band";
 import { Hero } from "@/components/marketing/hero";
 import { Services } from "@/components/marketing/services";
 import { Visit } from "@/components/marketing/visit";
@@ -20,13 +21,14 @@ export default function HomePage() {
       <main className="flex-1">
         <Hero />
 
-        <div className="border-y border-line bg-cream-50/60">
-          <ul className="mx-auto grid w-full max-w-6xl grid-cols-2 divide-x divide-line/70 lg:grid-cols-4">
+        <div className="border-b border-forest/10 bg-cream-50">
+          <ul className="mx-auto grid w-full max-w-[90rem] grid-cols-2 divide-x divide-forest/10 px-4 sm:px-6 lg:grid-cols-4 lg:px-10">
             {CREDENTIALS.map((item) => (
               <li
                 key={item}
-                className="px-5 py-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-forest/60 sm:text-[11px]"
+                className="flex items-center gap-3 px-4 py-5 text-[9px] font-extrabold uppercase tracking-[0.17em] text-forest/60 sm:text-[10px] lg:px-6"
               >
+                <span className="size-1.5 shrink-0 rounded-full bg-clay" />
                 {item}
               </li>
             ))}
@@ -34,6 +36,7 @@ export default function HomePage() {
         </div>
 
         <Services />
+        <CareBand />
         <Approach />
         <Visit />
       </main>

@@ -32,11 +32,13 @@ export default async function AccountLayout({
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-line bg-cream-50/80">
+      <header className="border-b border-forest/10 bg-cream-50/90">
         <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5 text-forest">
             <ToothMark className="size-5" />
-            <span className="font-display text-xl tracking-[-0.03em]">Dentai</span>
+            <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.055em]">
+              Dentai
+            </span>
           </Link>
 
           <nav className="ml-6 hidden items-center gap-5 text-[12px] font-medium text-muted sm:flex" aria-label="Account">

@@ -27,7 +27,7 @@ export default async function RegisterPage() {
       <SiteHeader />
 
       <main className="flex-1">
-        <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-20">
+        <div className="mx-auto grid w-full max-w-[82rem] gap-12 px-6 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Link
               href="/"
@@ -37,13 +37,11 @@ export default async function RegisterPage() {
               Back to the clinic
             </Link>
 
-            <p className="mt-8 text-[10px] font-semibold uppercase tracking-[0.26em] text-clay">
-              Account
-            </p>
-            <h1 className="mt-4 font-display text-[clamp(2.4rem,4.6vw,3.6rem)] leading-[0.96] text-forest">
+            <p className="eyebrow mt-8">Account</p>
+            <h1 className="mt-5 max-w-[11ch] font-display text-[clamp(2.8rem,5vw,4.6rem)] font-extrabold leading-[0.9] tracking-[-0.065em] text-forest">
               Your visits, in one place.
             </h1>
-            <p className="mt-5 max-w-sm text-[13.5px] leading-[1.75] text-muted">
+            <p className="font-editorial mt-5 max-w-md text-[1.08rem] leading-[1.55] text-muted sm:text-[1.16rem]">
               A patient account lets you see your upcoming appointments and agreed
               treatment plan without calling the front desk.
             </p>
@@ -68,8 +66,10 @@ export default async function RegisterPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9">
-            <h2 className="font-display text-2xl text-forest">Create an account</h2>
+          <div className="surface p-7 lg:p-9">
+            <h2 className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-forest">
+              Create an account
+            </h2>
             <p className="mt-2 text-[12.5px] text-muted">
               Patient accounts only. Takes under a minute.
             </p>

@@ -28,7 +28,7 @@ export default async function PatientsPage(props: {
         actions={
           <Link
             href="/clinic/patients/new"
-            className="inline-flex items-center gap-2 rounded-full bg-forest px-4 py-2.5 text-[12px] font-medium text-cream transition-colors hover:bg-forest-700"
+            className="btn btn-primary btn-sm"
           >
             <PlusIcon className="size-3.5" />
             New patient
@@ -89,7 +89,7 @@ async function PatientsContent({
           />
           <button
             type="submit"
-            className="rounded-full border border-forest/15 px-3 py-1.5 text-[11px] font-medium text-forest transition-colors hover:border-forest/35"
+            className="btn btn-outline btn-sm"
           >
             Search
           </button>

@@ -18,11 +18,11 @@ export function PageHeader({
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
         {eyebrow ? (
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-clay">
+          <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-clay">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-2 font-display text-[clamp(1.75rem,3vw,2.4rem)] leading-[1.05] text-forest">
+        <h1 className="mt-2 font-display text-[clamp(1.9rem,3vw,2.6rem)] font-extrabold leading-[0.98] tracking-[-0.06em] text-forest">
           {title}
         </h1>
         {description ? (
@@ -52,14 +52,16 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-line bg-cream-50/80 shadow-[0_1px_0_rgba(22,51,42,0.03)]",
+        "rounded-[1.35rem] border border-forest/10 bg-cream-50 shadow-[0_18px_48px_-42px_rgba(23,81,54,0.55)]",
         className,
       )}
     >
       {title || action ? (
         <div className="flex items-start justify-between gap-4 border-b border-line/80 px-5 py-4">
           <div>
-            <h2 className="font-display text-lg leading-tight text-forest">{title}</h2>
+            <h2 className="font-display text-[1.15rem] font-extrabold leading-tight tracking-[-0.045em] text-forest">
+              {title}
+            </h2>
             {description ? (
               <p className="mt-1 text-[11px] leading-relaxed text-muted">{description}</p>
             ) : null}
@@ -82,9 +84,11 @@ export function StatCard({
   hint?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-line bg-cream-50/80 px-5 py-4">
-      <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-muted">{label}</p>
-      <p className="mt-2 font-display text-3xl leading-none text-forest tabular-nums">{value}</p>
+    <div className="rounded-[1.35rem] border border-forest/10 bg-cream-50 px-5 py-4 shadow-[0_18px_48px_-42px_rgba(23,81,54,0.5)]">
+      <p className="text-[9px] font-extrabold uppercase tracking-[0.18em] text-muted">{label}</p>
+      <p className="mt-2 font-display text-3xl font-extrabold leading-none tracking-[-0.05em] text-forest tabular-nums">
+        {value}
+      </p>
       {hint ? <p className="mt-2 text-[11px] leading-snug text-muted/80">{hint}</p> : null}
     </div>
   );
@@ -141,7 +145,7 @@ export function EmptyState({
       {action ? (
         <Link
           href={action.href}
-          className="mt-4 inline-flex rounded-full border border-forest/20 px-4 py-2 text-[11px] font-medium text-forest transition-colors hover:border-forest/40"
+          className="btn btn-outline btn-sm mt-4"
         >
           {action.label}
         </Link>

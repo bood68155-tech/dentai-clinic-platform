@@ -28,7 +28,7 @@ export default function BookPage(props: {
       <SiteHeader />
 
       <main className="flex-1">
-        <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 py-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16 lg:py-20">
+        <div className="mx-auto grid w-full max-w-[82rem] gap-12 px-6 py-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Link
               href="/"
@@ -38,13 +38,11 @@ export default function BookPage(props: {
               Back to the clinic
             </Link>
 
-            <p className="mt-8 text-[10px] font-semibold uppercase tracking-[0.26em] text-clay">
-              Appointments
-            </p>
-            <h1 className="mt-4 font-display text-[clamp(2.4rem,4.6vw,3.6rem)] leading-[0.96] text-forest">
+            <p className="eyebrow mt-8">Appointments</p>
+            <h1 className="mt-5 max-w-[10ch] font-display text-[clamp(2.8rem,5vw,4.6rem)] font-extrabold leading-[0.9] tracking-[-0.065em] text-forest">
               Book a visit.
             </h1>
-            <p className="mt-5 max-w-sm text-[13.5px] leading-[1.75] text-muted">
+            <p className="font-editorial mt-5 max-w-md text-[1.08rem] leading-[1.55] text-muted sm:text-[1.16rem]">
               Choose a time that suits you and we will confirm it personally. First
               visits are 45 minutes, so there is room to talk before anyone picks up an
               instrument.
@@ -96,7 +94,7 @@ export default function BookPage(props: {
 
 function OpeningHint({ when }: { when: string }) {
   return (
-    <div className="mt-8 rounded-xl border border-line bg-cream-50 px-4 py-3">
+    <div className="mt-8 rounded-2xl border border-forest/15 bg-cream-50 px-5 py-4">
       <p className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-muted">
         Next opening
       </p>
@@ -144,8 +142,10 @@ async function BookingPanel({
 
   if (!result.ok || !result.data) {
     return (
-      <div className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9">
-        <h2 className="font-display text-2xl text-forest">Online booking is offline</h2>
+      <div className="surface p-7 lg:p-9">
+        <h2 className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-forest">
+          Online booking is offline
+        </h2>
         <p className="mt-3 text-[13px] leading-relaxed text-muted">
           The practice calendar is not connected yet. Call{" "}
           <a href={CLINIC_PROFILE.phoneHref} className="text-forest underline underline-offset-4">
@@ -177,7 +177,7 @@ async function BookingPanel({
 
 function FormSkeleton() {
   return (
-    <div className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9">
+    <div className="surface p-7 lg:p-9">
       <div className="h-6 w-56 animate-pulse rounded bg-sand/60" />
       <div className="mt-3 h-3 w-72 animate-pulse rounded bg-sand/50" />
       <div className="mt-6 grid gap-4 sm:grid-cols-2">

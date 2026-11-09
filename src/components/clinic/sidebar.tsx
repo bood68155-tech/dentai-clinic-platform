@@ -48,13 +48,15 @@ export function Sidebar({ user }: { user: SessionUser }) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-line bg-cream-50 lg:flex lg:flex-col">
-      <div className="flex h-20 items-center gap-2.5 border-b border-line px-6">
+    <aside className="hidden w-64 shrink-0 border-r border-forest/10 bg-cream-50 lg:flex lg:flex-col">
+      <div className="flex h-20 items-center gap-2.5 border-b border-forest/10 px-6">
         <Link href="/" className="flex items-center gap-2.5 text-forest">
           <ToothMark className="size-5" />
-          <span className="font-display text-xl tracking-[-0.03em]">Dentai</span>
+          <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.055em]">
+            Dentai
+          </span>
         </Link>
-        <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted">
+        <span className="ml-auto rounded-full border border-forest/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em] text-muted">
           Clinic
         </span>
       </div>
@@ -115,7 +117,7 @@ export function Sidebar({ user }: { user: SessionUser }) {
         </ul>
       </nav>
 
-      <div className="border-t border-line p-4">
+      <div className="border-t border-forest/10 p-4">
         <div className="rounded-xl bg-cream px-4 py-3">
           <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-muted">
             Signed in
@@ -154,7 +156,7 @@ export function MobileNav() {
 
   return (
     <nav
-      className="flex items-center gap-1 overflow-x-auto border-b border-line bg-cream-50 px-4 py-2.5 lg:hidden"
+      className="flex items-center gap-1 overflow-x-auto border-b border-forest/10 bg-cream-50 px-4 py-2.5 lg:hidden"
       aria-label="Clinic sections"
     >
       <Link href="/" className="mr-2 flex items-center gap-1.5 px-1 text-forest">

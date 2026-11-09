@@ -10,7 +10,7 @@ import { BOOKABLE_TIMES } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
 const inputClass =
-  "w-full rounded-xl border border-line bg-cream-50 px-3.5 py-2.5 text-[13px] text-forest placeholder:text-muted/50 transition-colors focus:border-forest/40 focus:outline-none";
+  "w-full rounded-xl border border-forest/15 bg-cream-50 px-3.5 py-3 text-[13px] text-forest placeholder:text-muted/45 transition-colors focus:border-forest/40 focus:outline-none";
 
 function Field({
   label,
@@ -65,7 +65,7 @@ export function BookingForm({
 
   if (state.status === "success" && state.confirmation) {
     return (
-      <div className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9">
+      <div className="surface p-7 lg:p-9">
         <span className="grid size-11 place-items-center rounded-full bg-forest text-cream">
           <CheckIcon className="size-5" />
         </span>
@@ -91,10 +91,7 @@ export function BookingForm({
           The front desk will call to confirm the time and talk through anything we
           should know before your visit.
         </p>
-        <Link
-          href="/"
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-forest/20 px-5 py-2.5 text-[12px] font-medium text-forest transition-colors hover:border-forest/40"
-        >
+        <Link href="/" className="btn btn-outline btn-sm mt-6">
           Back to the clinic
           <ArrowRight className="size-3.5" />
         </Link>
@@ -103,12 +100,11 @@ export function BookingForm({
   }
 
   return (
-    <form
-      action={formAction}
-      className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9"
-    >
+    <form action={formAction} className="surface p-7 lg:p-9">
       <div className="flex items-baseline justify-between gap-4">
-        <h2 className="font-display text-2xl text-forest">Request an appointment</h2>
+        <h2 className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-forest">
+          Request an appointment
+        </h2>
         <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
           Online
         </span>
@@ -231,13 +227,10 @@ export function BookingForm({
         <button
           type="submit"
           disabled={pending}
-          className={cn(
-            "group inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-[12.5px] font-medium text-cream transition-colors hover:bg-forest-700",
-            pending && "opacity-60",
-          )}
+          className={cn("btn btn-primary", pending && "opacity-60")}
         >
           {pending ? "Sending…" : "Request appointment"}
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="btn-arrow size-4" />
         </button>
         <span className="text-[10.5px] leading-snug text-muted">
           No payment is taken online.

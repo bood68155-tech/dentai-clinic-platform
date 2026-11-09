@@ -38,7 +38,7 @@ export default async function ClinicOverviewPage() {
         actions={
           <Link
             href="/clinic/appointments"
-            className="inline-flex items-center gap-2 rounded-full bg-forest px-4 py-2.5 text-[12px] font-medium text-cream transition-colors hover:bg-forest-700"
+            className="btn btn-primary btn-sm"
           >
             Open agenda
             <ArrowRight className="size-3.5" />

@@ -7,7 +7,7 @@ import { registerPatientAction } from "@/app/auth/actions";
 import { initialAuthState } from "@/lib/form-state";
 
 const inputClass =
-  "w-full rounded-xl border border-line bg-cream-50 px-3.5 py-2.5 text-[13px] text-forest placeholder:text-muted/50 transition-colors focus:border-forest/40 focus:outline-none";
+  "w-full rounded-xl border border-forest/15 bg-cream-50 px-3.5 py-3 text-[13px] text-forest placeholder:text-muted/45 transition-colors focus:border-forest/40 focus:outline-none";
 
 function Field({
   label,
@@ -113,7 +113,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-full bg-forest px-5 py-3 text-[13px] font-medium text-cream transition-colors hover:bg-forest-700 disabled:opacity-60"
+        className="btn btn-primary btn-block"
       >
         {pending ? "Creating account…" : "Create account"}
       </button>

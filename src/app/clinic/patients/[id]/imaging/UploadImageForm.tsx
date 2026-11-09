@@ -152,7 +152,7 @@ export function UploadImageForm({
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-5 py-2.5 text-[12px] font-medium text-cream transition-colors hover:bg-forest-700 disabled:opacity-60"
+        className="btn btn-primary btn-block"
       >
         <Upload className="size-4" />
         {pending ? "Uploading…" : "Attach image"}

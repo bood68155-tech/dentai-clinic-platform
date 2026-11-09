@@ -75,7 +75,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
     <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
       <div className="space-y-6">
         {/* Next visit */}
-        <section className="rounded-[1.75rem] border border-forest/15 bg-forest p-6 text-cream lg:p-8" aria-label="Next visit">
+        <section className="rounded-[1.75rem] border border-forest/15 bg-forest p-6 text-cream shadow-[0_28px_60px_-38px_rgba(23,81,54,0.8)] lg:p-8" aria-label="Next visit">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream/60">
             Next visit
           </p>
@@ -121,7 +121,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
 
           <Link
             href="/book"
-            className="group mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-5 py-2.5 text-[12px] font-medium text-forest transition-colors hover:bg-cream-100"
+            className="btn btn-light btn-sm mt-6"
           >
             Book a visit
             <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -129,7 +129,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
         </section>
 
         {/* Upcoming */}
-        <section aria-label="Upcoming visits" className="rounded-[1.75rem] border border-line bg-cream-50 p-6 lg:p-7">
+        <section aria-label="Upcoming visits" className="surface p-6 lg:p-7">
           <h2 className="font-display text-xl text-forest">Upcoming</h2>
           {upcoming.length === 0 ? (
             <p className="mt-3 text-[12.5px] text-muted">
@@ -159,7 +159,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
         </section>
 
         {/* Recent visits */}
-        <section aria-label="Recent visits" className="rounded-[1.75rem] border border-line bg-cream-50 p-6 lg:p-7">
+        <section aria-label="Recent visits" className="surface p-6 lg:p-7">
           <h2 className="font-display text-xl text-forest">Recent visits</h2>
           {recent.length === 0 ? (
             <p className="mt-3 text-[12.5px] text-muted">
@@ -187,7 +187,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
 
       <div className="space-y-6">
         {/* Record */}
-        <section aria-label="Your record" className="rounded-[1.75rem] border border-line bg-cream-50 p-6 lg:p-7">
+        <section aria-label="Your record" className="surface p-6 lg:p-7">
           <div className="flex items-center gap-3">
             <span className="grid size-11 place-items-center rounded-full bg-forest text-cream">
               <ToothMark className="size-5" />
@@ -231,7 +231,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
         </section>
 
         {/* Treatment plan */}
-        <section aria-label="Treatment plan" className="rounded-[1.75rem] border border-line bg-cream-50 p-6 lg:p-7">
+        <section aria-label="Treatment plan" className="surface p-6 lg:p-7">
           <div className="flex items-start justify-between gap-4">
             <h2 className="font-display text-xl text-forest">Treatment plan</h2>
             {plan.length > 0 ? (

@@ -170,7 +170,7 @@ export function PatientForm() {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-full bg-forest px-5 py-2.5 text-[12px] font-medium text-cream transition-colors hover:bg-forest-700 disabled:opacity-60"
+          className="btn btn-primary"
         >
           {pending ? "Saving…" : "Create patient"}
         </button>

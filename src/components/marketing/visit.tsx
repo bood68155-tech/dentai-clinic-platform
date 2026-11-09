@@ -1,116 +1,109 @@
 import Link from "next/link";
 
 import { ArrowRight, ClockIcon, PhoneIcon, PinIcon } from "@/components/icons";
+import { Reveal } from "@/components/reveal";
 import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 
 export function Visit() {
   return (
-    <section id="visit" className="border-t border-line">
-      <div className="mx-auto grid w-full max-w-6xl gap-14 px-6 py-20 lg:grid-cols-2 lg:gap-20 lg:py-28">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-clay">
-            Visiting
-          </p>
-          <h2 className="mt-4 max-w-md font-display text-[clamp(2rem,3.6vw,3rem)] leading-[1.05] text-forest">
-            Find us two blocks from the Spring Street station.
-          </h2>
+    <section
+      id="visit"
+      className="border-t border-forest/10 bg-cream px-6 py-24 lg:px-10 lg:py-36"
+    >
+      <div className="mx-auto w-full max-w-[90rem]">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-20">
+          <Reveal>
+            <p className="eyebrow">Visit</p>
+            <h2 className="mt-5 max-w-[12ch] font-display text-[clamp(2.6rem,5vw,4.7rem)] leading-[0.92] tracking-[-0.065em] text-forest">
+              We’d love to meet you.
+            </h2>
+          </Reveal>
 
-          <div className="mt-10 space-y-7">
-            <div className="flex gap-4">
-              <PinIcon className="mt-0.5 size-5 shrink-0 text-clay" />
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-                  The clinic
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-forest">
-                  {CLINIC_PROFILE.address[0]}
-                  <br />
-                  {CLINIC_PROFILE.address[1]}
-                </p>
-              </div>
+          <Reveal delay={100}>
+            <p className="font-editorial max-w-lg text-[1.12rem] leading-[1.55] text-muted sm:text-[1.28rem]">
+              Come as you are. We will take the time to understand your history, talk
+              through what matters to you, and make a plan you feel good about.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Link href="/book" className="btn btn-primary btn-lg">
+                Book online
+                <ArrowRight className="btn-arrow size-4" />
+              </Link>
+              <a href={CLINIC_PROFILE.phoneHref} className="btn btn-outline btn-lg">
+                <PhoneIcon className="size-4" />
+                {CLINIC_PROFILE.phone}
+              </a>
             </div>
-
-            <div className="flex gap-4">
-              <PhoneIcon className="mt-0.5 size-5 shrink-0 text-clay" />
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-                  Front desk
-                </p>
-                <a
-                  href={CLINIC_PROFILE.phoneHref}
-                  className="mt-1.5 block text-sm text-forest underline-offset-4 hover:underline"
-                >
-                  {CLINIC_PROFILE.phone}
-                </a>
-                <a
-                  href={`mailto:${CLINIC_PROFILE.email}`}
-                  className="text-sm text-forest/70 underline-offset-4 hover:underline"
-                >
-                  {CLINIC_PROFILE.email}
-                </a>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <ClockIcon className="mt-0.5 size-5 shrink-0 text-clay" />
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-                  Emergencies
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-forest">
-                  Registered patients can call the same number after hours and reach the
-                  on-call clinician.
-                </p>
-              </div>
-            </div>
-          </div>
+          </Reveal>
         </div>
 
-        <div className="rounded-[1.75rem] border border-line bg-cream-50 p-7 lg:p-9">
-          <div className="flex items-baseline justify-between">
-            <h3 className="font-display text-2xl text-forest">Opening hours</h3>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-              GMT-5
-            </span>
+        <Reveal className="mt-24 grid gap-9 border-t border-forest/15 pt-10 sm:mt-22 sm:grid-cols-2 lg:mt-28 lg:grid-cols-[1.1fr_1fr_1.2fr] lg:gap-12">
+          <div>
+            <div className="flex items-center gap-2.5 text-clay">
+              <PinIcon className="size-4" />
+              <p className="text-[9px] font-extrabold uppercase tracking-[0.2em]">
+                The clinic
+              </p>
+            </div>
+            <p className="mt-3 text-[13px] leading-[1.7] text-forest">
+              {CLINIC_PROFILE.address[0]}
+              <br />
+              {CLINIC_PROFILE.address[1]}
+            </p>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted">
+              Two blocks from Spring Street station.
+            </p>
           </div>
 
-          <dl className="mt-6 divide-y divide-line/70">
-            {CLINIC_PROFILE.hours.map((entry) => (
-              <div
-                key={entry.days}
-                className="flex items-center justify-between py-3.5 text-sm"
-              >
-                <dt className="text-forest/75">{entry.days}</dt>
-                <dd
-                  className={
-                    entry.time === "Closed"
-                      ? "text-muted/70"
-                      : "font-medium text-forest tabular-nums"
-                  }
-                >
-                  {entry.time}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div>
+            <div className="flex items-center gap-2.5 text-clay">
+              <PhoneIcon className="size-4" />
+              <p className="text-[9px] font-extrabold uppercase tracking-[0.2em]">
+                Front desk
+              </p>
+            </div>
+            <a
+              href={CLINIC_PROFILE.phoneHref}
+              className="mt-3 block text-[13px] text-forest transition-colors hover:text-clay"
+            >
+              {CLINIC_PROFILE.phone}
+            </a>
+            <a
+              href={`mailto:${CLINIC_PROFILE.email}`}
+              className="mt-1 block text-[13px] text-forest/70 transition-colors hover:text-clay"
+            >
+              {CLINIC_PROFILE.email}
+            </a>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted">
+              Registered patients can reach the on-call clinician after hours.
+            </p>
+          </div>
 
-          <Link
-            href="/book"
-            className="group mt-7 flex w-full items-center justify-between gap-3 rounded-full bg-forest px-6 py-3.5 text-sm font-medium text-cream transition-colors hover:bg-forest-700"
-          >
-            Book online
-            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-          <a
-            href={CLINIC_PROFILE.phoneHref}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-forest/20 px-6 py-3 text-sm font-medium text-forest transition-colors hover:border-forest/40"
-          >
-            Or call {CLINIC_PROFILE.phone}
-          </a>
-          <p className="mt-4 text-center text-[11px] text-muted">
-            Walk-ins accepted before 11:00 · Insurance verified in advance
-          </p>
-        </div>
+          <div>
+            <div className="flex items-center gap-2.5 text-clay">
+              <ClockIcon className="size-4" />
+              <p className="text-[9px] font-extrabold uppercase tracking-[0.2em]">
+                Opening hours
+              </p>
+            </div>
+            <dl className="mt-3 space-y-1.5">
+              {CLINIC_PROFILE.hours.map((entry) => (
+                <div key={entry.days} className="flex items-baseline justify-between gap-4">
+                  <dt className="text-[11px] text-muted">{entry.days}</dt>
+                  <dd
+                    className={
+                      entry.time === "Closed"
+                        ? "text-[10.5px] text-muted/60"
+                        : "text-[10.5px] font-semibold tabular-nums text-forest"
+                    }
+                  >
+                    {entry.time}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

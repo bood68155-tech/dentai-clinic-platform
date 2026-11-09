@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { ArrowRight, ClockIcon, ToothMark } from "@/components/icons";
+import { ArrowRight, ClockIcon } from "@/components/icons";
 import { getClinic, getNextOpening } from "@/db/queries";
 import { load } from "@/db/safe";
 import { OPENING_HOURS, weekdayIndex } from "@/lib/time";
@@ -23,21 +23,18 @@ function CardBody({
   href: string;
 }) {
   return (
-    <div className="rounded-2xl border border-forest/10 bg-cream-50/95 p-5 shadow-[0_18px_40px_-24px_rgba(22,51,42,0.55)] backdrop-blur">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-full bg-forest text-cream">
-            <ToothMark className="size-5" />
-          </span>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-              Next available
-            </p>
-            <p className="font-display text-lg leading-tight text-forest">{when}</p>
-          </div>
+    <div className="rounded-[1.35rem] border border-cream/65 bg-cream/95 p-4 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[8.5px] font-extrabold uppercase tracking-[0.2em] text-clay">
+            Next available
+          </p>
+          <p className="mt-1.5 font-display text-[1.05rem] font-extrabold leading-tight tracking-[-0.04em] text-forest">
+            {when}
+          </p>
         </div>
-        <span className="flex items-center gap-1.5 text-[11px] font-medium text-forest/60">
-          <ClockIcon className="size-3.5" />
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-forest/10 bg-cream-50 px-2.5 py-1 text-[9px] font-bold text-forest/60">
+          <ClockIcon className="size-3" />
           45 min
         </span>
       </div>
@@ -46,10 +43,10 @@ function CardBody({
         {times.map((time) => (
           <div
             key={time}
-            className={`rounded-lg border px-1 py-2 text-center text-[11px] tabular-nums ${
+            className={`rounded-lg border px-1 py-2 text-center text-[10px] font-semibold tabular-nums ${
               time === active
                 ? "border-forest bg-forest text-cream"
-                : "border-forest/15 text-forest/55"
+                : "border-forest/10 bg-cream-50/70 text-forest/55"
             }`}
           >
             {time}
@@ -57,15 +54,16 @@ function CardBody({
         ))}
       </div>
 
-      <p className="mt-3.5 text-[11px] leading-relaxed text-muted">{note}</p>
-
-      <Link
-        href={href}
-        className="group mt-3 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-forest transition-colors hover:text-clay"
-      >
-        Take this time
-        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-      </Link>
+      <div className="mt-3.5 flex items-end justify-between gap-4">
+        <p className="max-w-[15rem] text-[10px] leading-relaxed text-muted">{note}</p>
+        <Link
+          href={href}
+          className="group inline-flex shrink-0 items-center gap-1.5 text-[10.5px] font-extrabold text-forest transition-colors hover:text-clay"
+        >
+          Take this time
+          <ArrowRight className="size-3 transition-transform duration-300 group-hover:translate-x-1" />
+        </Link>
+      </div>
     </div>
   );
 }
@@ -120,19 +118,17 @@ async function LiveAvailability() {
 
 export function AvailabilityCard() {
   return (
-    <div className="absolute inset-x-6 bottom-6">
-      <Suspense
-        fallback={
-          <CardBody
-            when="Checking the book…"
-            note="Live availability from the practice calendar."
-            times={FALLBACK_TIMES}
-            href="/book"
-          />
-        }
-      >
-        <LiveAvailability />
-      </Suspense>
-    </div>
+    <Suspense
+      fallback={
+        <CardBody
+          when="Checking the book…"
+          note="Live availability from the practice calendar."
+          times={FALLBACK_TIMES}
+          href="/book"
+        />
+      }
+    >
+      <LiveAvailability />
+    </Suspense>
   );
 }
