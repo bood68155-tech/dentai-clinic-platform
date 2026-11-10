@@ -26,7 +26,7 @@ export function Services() {
 
         <div className="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
           <Reveal className="lg:sticky lg:top-28 lg:self-start">
-            <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-sand">
+            <div className="img-zoom relative aspect-[4/5] overflow-hidden bg-sand">
               <Image
                 src="/images/dental-room.jpg"
                 alt="A bright, modern dental treatment room with a chair and clinical light"
@@ -35,7 +35,7 @@ export function Services() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-forest/55 via-transparent to-transparent" />
-              <div className="absolute right-5 bottom-5 left-5 rounded-[1.3rem] border border-cream/25 bg-forest/75 p-5 text-cream backdrop-blur-md sm:right-6 sm:bottom-6 sm:left-6">
+              <div className="absolute right-5 bottom-5 left-5 border border-paper/30 bg-forest/85 p-5 text-paper sm:right-6 sm:bottom-6 sm:left-6">
                 <p className="text-[8.5px] font-extrabold uppercase tracking-[0.22em] text-clay-soft">
                   The clinic
                 </p>

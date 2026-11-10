@@ -23,7 +23,7 @@ function CardBody({
   href: string;
 }) {
   return (
-    <div className="rounded-[1.35rem] border border-cream/65 bg-cream/95 p-4 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-5">
+    <div className="border border-ink bg-paper p-4 sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[8.5px] font-extrabold uppercase tracking-[0.2em] text-clay">
@@ -33,7 +33,7 @@ function CardBody({
             {when}
           </p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-forest/10 bg-cream-50 px-2.5 py-1 text-[9px] font-bold text-forest/60">
+        <span className="inline-flex shrink-0 items-center gap-1.5 border border-ink/25 px-2.5 py-1 text-[9px] font-bold text-forest/60">
           <ClockIcon className="size-3" />
           45 min
         </span>
@@ -43,10 +43,10 @@ function CardBody({
         {times.map((time) => (
           <div
             key={time}
-            className={`rounded-lg border px-1 py-2 text-center text-[10px] font-semibold tabular-nums ${
+            className={`border px-1 py-2 text-center text-[10px] font-semibold tabular-nums ${
               time === active
-                ? "border-forest bg-forest text-cream"
-                : "border-forest/10 bg-cream-50/70 text-forest/55"
+                ? "border-forest bg-forest text-paper"
+                : "border-ink/20 text-ink/60"
             }`}
           >
             {time}

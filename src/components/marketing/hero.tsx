@@ -33,7 +33,7 @@ export function Hero() {
           </p>
 
           <div className="animate-fade-up animate-delay-300 mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-            <button type="button" data-book-online className="btn btn-light btn-lg btn-book">
+            <button type="button" data-book-online className="btn btn-on-green btn-lg btn-book">
               <RollingLabel>Book online</RollingLabel>
               <RollingChip />
             </button>

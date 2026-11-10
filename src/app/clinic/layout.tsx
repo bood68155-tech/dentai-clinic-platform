@@ -24,7 +24,7 @@ export default async function ClinicLayout({ children }: LayoutProps<"/clinic">)
   const user = await requireStaffUser();
 
   return (
-    <div className="flex min-h-screen flex-1 bg-cream">
+    <div className="flex min-h-screen flex-1 bg-cream font-sans">
       <Sidebar user={user} />
       <div className="flex min-w-0 flex-1 flex-col">
         <MobileNav />

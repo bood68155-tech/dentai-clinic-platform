@@ -11,7 +11,7 @@ import { BOOKABLE_TIMES } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
 const inputClass =
-  "w-full rounded-xl border border-forest/15 bg-cream-50 px-3.5 py-3 text-[13px] text-forest placeholder:text-muted/45 transition-colors focus:border-forest/40 focus:outline-none";
+  "w-full border-0 border-b border-ink bg-transparent px-0 py-2.5 text-[1.05rem] outline-none transition-colors placeholder:text-ink/35 focus:border-forest";
 
 function Field({
   label,
@@ -118,7 +118,7 @@ export function BookingForm({
       {state.status === "error" ? (
         <p
           role="alert"
-          className="mt-4 rounded-xl border border-[#8A4A4A]/30 bg-[#8A4A4A]/5 px-4 py-3 text-[12px] text-[#8A4A4A]"
+          className="form-error mt-4"
         >
           {state.message}
         </p>

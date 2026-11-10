@@ -1,63 +1,80 @@
 import Link from "next/link";
 
 import { BookOnline } from "@/components/marketing/book-online";
-import { RollingChip, RollingLabel } from "@/components/rolling-label";
-import { ToothMark } from "@/components/icons";
+import { RollingLabel } from "@/components/rolling-label";
 
 const NAV = [
-  { label: "Treatments", href: "#treatments" },
-  { label: "Approach", href: "#approach" },
-  { label: "Visit", href: "#visit" },
+  { label: "Treatments", href: "/#treatments" },
+  { label: "Approach", href: "/#approach" },
+  { label: "Visit", href: "/#visit" },
   { label: "Contact", href: "/contact" },
+  { label: "Clinic", href: "/clinic" },
 ];
 
+/**
+ * Sticky bar lifted from the reference site: cream ground, one hairline rule
+ * along the bottom, Manrope links spread evenly across the row and a gold
+ * text-only Book Online action at the end. No logo mark, no pill, no shadow.
+ */
 export function SiteHeader() {
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-forest/10 bg-cream/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-[4.75rem] w-full max-w-[90rem] items-center justify-between gap-6 px-6 lg:h-20 lg:px-10">
-          <Link href="/" className="group flex items-center gap-2.5 text-forest">
-            <span className="grid size-8 place-items-center rounded-full border border-forest/15 transition-colors group-hover:border-forest/40">
-              <ToothMark className="size-[1.15rem]" />
-            </span>
-            <span className="font-display text-[1.35rem] font-extrabold tracking-[-0.055em]">
-              Dentai
-            </span>
+      <header className="sticky top-0 z-50 border-b border-ink bg-paper">
+        <div className="shell flex items-center justify-between gap-8 py-3 lg:py-4">
+          <Link
+            href="/"
+            className="font-display text-[1.375rem] font-extrabold leading-none tracking-[-0.05em] text-ink transition-colors duration-300 hover:text-forest"
+          >
+            Dentai
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
+          <nav
+            aria-label="Primary"
+            className="hidden flex-1 grid-cols-5 items-center lg:grid"
+          >
             {NAV.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-                className="text-[11px] font-bold uppercase tracking-[0.15em] text-forest/65 transition-colors hover:text-forest"
+                className="font-sans text-base font-bold leading-none tracking-[-0.05em] text-ink transition-colors duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:text-forest"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
-            <Link
-              href="/clinic"
-              className="text-[11px] font-bold uppercase tracking-[0.15em] text-forest/65 transition-colors hover:text-forest"
-            >
-              Clinic platform
-            </Link>
           </nav>
 
-          <div className="flex items-center gap-5">
-            <Link
-              href="/login"
-              className="hidden text-[11px] font-bold uppercase tracking-[0.15em] text-forest/65 transition-colors hover:text-forest sm:inline-flex"
-            >
-              Sign in
-            </Link>
-            <button
-              type="button"
-              data-book-online
-              className="btn btn-primary btn-sm btn-book"
-            >
-              <RollingLabel>Book a visit</RollingLabel>
-              <RollingChip />
+          <div className="flex items-center gap-6">
+            <button type="button" data-book-online className="btn btn-book">
+              <RollingLabel>Book Online</RollingLabel>
             </button>
+
+            <details className="relative lg:hidden">
+              <summary className="cursor-pointer font-sans text-base font-bold leading-none tracking-[-0.05em] text-ink">
+                Menu
+              </summary>
+              <div className="absolute right-0 top-full z-50 mt-3 w-60 border border-ink bg-paper px-5 py-4">
+                <ul className="flex flex-col">
+                  {NAV.map((item) => (
+                    <li key={item.href} className="border-b border-ink/15 last:border-0">
+                      <Link
+                        href={item.href}
+                        className="block py-2.5 font-sans text-base font-bold tracking-[-0.05em]"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                  <li className="border-t border-ink/15">
+                    <Link
+                      href="/login"
+                      className="block py-2.5 font-sans text-base font-bold tracking-[-0.05em]"
+                    >
+                      Sign in
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </details>
           </div>
         </div>
       </header>

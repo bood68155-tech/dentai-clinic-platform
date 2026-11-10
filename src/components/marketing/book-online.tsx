@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { bookAppointmentAction } from "@/app/book/actions";
-import { CheckIcon } from "@/components/icons";
 import { RollingChip, RollingLabel } from "@/components/rolling-label";
 import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 import { initialBookingState } from "@/lib/form-state";
@@ -119,9 +118,18 @@ export function BookOnline() {
 
   const open = useCallback(() => {
     setView("picker");
+    // The clinic clock is read when the dialog is opened rather than during
+    // render, so the page can still be prerendered without a live date.
+    if (!today) {
+      const now = todayInClinic();
+      const first = firstBookableDay(now);
+      setToday(now);
+      setSelected(first);
+      setMonth({ y: first.y, m: first.m });
+    }
     dialogRef.current?.showModal();
     document.documentElement.classList.add("overflow-hidden");
-  }, []);
+  }, [today]);
 
   const close = useCallback(() => {
     dialogRef.current?.close();
@@ -138,14 +146,6 @@ export function BookOnline() {
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, [open]);
-
-  useEffect(() => {
-    const now = todayInClinic();
-    const first = firstBookableDay(now);
-    setToday(now);
-    setSelected(first);
-    setMonth({ y: first.y, m: first.m });
-  }, []);
 
   useEffect(() => {
     const tick = () =>
@@ -169,11 +169,11 @@ export function BookOnline() {
       ref={dialogRef}
       aria-labelledby="bookingTitle"
       onClose={() => document.documentElement.classList.remove("overflow-hidden")}
-      className="z-[90] h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 text-forest backdrop:bg-ink/60 backdrop:backdrop-blur-sm"
+      className="z-[90] h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 text-ink backdrop:bg-ink/70"
     >
       <div className="flex min-h-full items-center justify-center p-3 sm:p-6">
-        <div className="animate-modal-in grid max-h-[92svh] w-full max-w-[64rem] overflow-y-auto border border-cream/15 bg-cream shadow-[0_40px_120px_-40px_rgba(0,0,0,0.55)] lg:grid-cols-[20rem_minmax(0,1fr)]">
-          <aside className="relative flex flex-col gap-4 bg-forest px-6 py-6 text-cream sm:px-7">
+        <div className="animate-modal-in grid max-h-[92svh] w-full max-w-[64rem] overflow-y-auto border border-ink bg-paper lg:grid-cols-[20rem_minmax(0,1fr)]">
+          <aside className="relative flex min-h-0 flex-col gap-4 overflow-y-auto bg-forest px-6 py-6 text-paper sm:px-7">
             <div className="flex items-center justify-between gap-4">
               <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.055em]">
                 {CLINIC_PROFILE.name}
@@ -182,7 +182,7 @@ export function BookOnline() {
                 type="button"
                 onClick={close}
                 aria-label="Close booking"
-                className="grid size-8 place-items-center rounded-full border border-cream/30 text-cream transition-colors hover:bg-cream hover:text-forest"
+                className="grid size-8 place-items-center border border-paper/40 text-paper transition-colors hover:bg-paper hover:text-forest"
               >
                 ✕
               </button>
@@ -194,11 +194,11 @@ export function BookOnline() {
                 alt=""
                 width={42}
                 height={42}
-                className="size-10 rounded-full object-cover"
+                className="size-10 object-cover"
               />
               <span>
-                <b className="block text-[13px] font-medium text-cream">The front desk</b>
-                <em className="mt-0.5 block text-[8.5px] uppercase not-italic tracking-[0.08em] text-cream/55">
+                <b className="block text-[13px] font-bold text-paper">The front desk</b>
+                <em className="mt-0.5 block text-[8.5px] uppercase not-italic tracking-[0.08em] text-paper/60">
                   {CLINIC_PROFILE.address[0]}
                 </em>
               </span>
@@ -207,31 +207,31 @@ export function BookOnline() {
             <div>
               <h2
                 id="bookingTitle"
-                className="font-display text-[clamp(1.9rem,3vw,2.4rem)] font-extrabold leading-[0.95] tracking-[-0.05em] text-cream"
+                className="text-paper"
               >
                 Book an appointment
               </h2>
-              <p className="mt-3 max-w-[34ch] text-[12.5px] leading-[1.55] text-cream/65">
+              <p className="mt-3 max-w-[34ch] font-editorial text-[1.05rem] leading-[1.5] text-paper/75">
                 Choose a time, then tell us who to expect. We confirm every request by
                 phone or email the same working day — no payment needed to hold a slot.
               </p>
             </div>
 
-            <ul className="border-t border-cream/15">
-              <li className="flex items-baseline justify-between gap-4 border-b border-cream/10 py-2 text-[9px] uppercase tracking-[0.08em] text-cream/50">
-                Visit <b className="text-[11.5px] font-medium normal-case tracking-normal text-cream">{SLOT_MINUTES} min · In clinic</b>
+            <ul className="border-t border-paper/25">
+              <li className="flex items-baseline justify-between gap-4 border-b border-paper/20 py-2.5 text-[9px] uppercase tracking-[0.08em] text-paper/60">
+                Visit <b className="text-[11.5px] font-medium normal-case tracking-normal text-paper">{SLOT_MINUTES} min · In clinic</b>
               </li>
-              <li className="flex items-baseline justify-between gap-4 border-b border-cream/10 py-2 text-[9px] uppercase tracking-[0.08em] text-cream/50">
-                Where <b className="text-[11.5px] font-medium normal-case tracking-normal text-cream">SoHo, New York</b>
+              <li className="flex items-baseline justify-between gap-4 border-b border-paper/20 py-2.5 text-[9px] uppercase tracking-[0.08em] text-paper/60">
+                Where <b className="text-[11.5px] font-medium normal-case tracking-normal text-paper">SoHo, New York</b>
               </li>
-              <li className="flex items-baseline justify-between gap-4 border-b border-cream/10 py-2 text-[9px] uppercase tracking-[0.08em] text-cream/50">
-                Right now <b className="text-[11.5px] font-medium tabular-nums text-cream">{clock || "--:--"} NY</b>
+              <li className="flex items-baseline justify-between gap-4 border-b border-paper/20 py-2.5 text-[9px] uppercase tracking-[0.08em] text-paper/60">
+                Right now <b className="text-[11.5px] font-medium tabular-nums text-paper">{clock || "--:--"} NY</b>
               </li>
             </ul>
 
-            <p className="mt-auto pt-2 text-[10px] leading-relaxed text-cream/50">
+            <p className="mt-auto pt-2 text-[10px] leading-relaxed text-paper/60">
               Prefer to talk? Call{" "}
-              <a href={CLINIC_PROFILE.phoneHref} className="text-cream underline underline-offset-2">
+              <a href={CLINIC_PROFILE.phoneHref} className="text-paper underline underline-offset-2">
                 {CLINIC_PROFILE.phone}
               </a>
               .
@@ -241,32 +241,28 @@ export function BookOnline() {
           <div className="px-5 py-6 sm:px-8 sm:py-7">
             {done ? (
               <div className="animate-step-in flex flex-col items-start">
-                <span className="grid size-11 place-items-center rounded-full bg-forest text-cream">
-                  <CheckIcon className="size-5" />
-                </span>
-                <h3 className="mt-5 font-display text-[1.8rem] font-extrabold leading-[1.02] tracking-[-0.05em] text-forest">
-                  Request received.
-                </h3>
-                <p className="mt-3 text-[12.5px] leading-relaxed text-muted">
+                <p className="eyebrow">Confirmed</p>
+                <p className="lede mt-4 text-clay">Request received.</p>
+                <p className="mt-3 text-[1rem] leading-relaxed text-ink/70">
                   Thank you, {done.patientName}. We have pencilled you in for:
                 </p>
-                <dl className="mt-5 w-full border-y border-forest/15 py-4 text-[13px]">
+                <dl className="mt-5 w-full border-y border-ink/40 py-4 text-[1rem]">
                   <div className="flex justify-between gap-6">
-                    <dt className="text-muted">When</dt>
-                    <dd className="text-right text-forest">
+                    <dt className="text-ink/60">When</dt>
+                    <dd className="text-right">
                       {done.date} · {done.time}
                     </dd>
                   </div>
                   <div className="mt-2 flex justify-between gap-6">
-                    <dt className="text-muted">Visit</dt>
-                    <dd className="text-right text-forest">{done.treatment}</dd>
+                    <dt className="text-ink/60">Visit</dt>
+                    <dd className="text-right">{done.treatment}</dd>
                   </div>
                 </dl>
-                <p className="mt-4 max-w-[42ch] text-[11.5px] leading-relaxed text-muted">
+                <p className="mt-4 max-w-[42ch] text-[0.9rem] leading-relaxed text-ink/60">
                   The front desk will call to confirm the time and talk through anything
                   we should know before your visit.
                 </p>
-                <button type="button" onClick={close} className="btn btn-primary mt-6">
+                <button type="button" onClick={close} className="btn mt-6">
                   <RollingLabel>Done</RollingLabel>
                   <RollingChip />
                 </button>
@@ -276,18 +272,18 @@ export function BookOnline() {
                 <button
                   type="button"
                   onClick={() => setView("picker")}
-                  className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted transition-colors hover:text-forest"
+                  className="meta text-ink/60 transition-colors hover:text-forest"
                 >
                   ← Change time
                 </button>
-                <h3 className="mt-3 font-display text-[1.7rem] font-extrabold leading-none tracking-[-0.05em] text-forest">
+                <h3 className="display-2 mt-3">
                   Your details
                 </h3>
-                <p className="mt-3 flex flex-col gap-1 border border-forest/15 bg-cream-50 px-3.5 py-3">
-                  <b className="text-[12.5px] font-semibold text-forest">
+                <p className="mt-4 flex flex-col gap-1 border-b border-ink pb-3">
+                  <b className="text-[1.05rem] font-semibold">
                     {selected ? weekdayLabel(selected) : ""} · {slot}
                   </b>
-                  <span className="text-[8.5px] font-semibold uppercase tracking-[0.1em] text-muted">
+                  <span className="text-[8.5px] font-semibold uppercase tracking-[0.1em] text-ink/55">
                     {SLOT_MINUTES} min · In clinic · {TZ}
                   </span>
                 </p>
@@ -298,7 +294,7 @@ export function BookOnline() {
                 {state.status === "error" ? (
                   <p
                     role="alert"
-                    className="mb-3 border border-[#8A4A4A]/30 bg-[#8A4A4A]/5 px-3 py-2 text-[11px] text-[#8A4A4A]"
+                    className="form-error mb-3"
                   >
                     {state.message}
                   </p>
@@ -323,7 +319,7 @@ export function BookOnline() {
                   <textarea id="notes" name="notes" rows={2} placeholder="A sentence is plenty." className={`${fieldClass} resize-y`} />
                 </BookingField>
 
-                <button type="submit" disabled={pending} className="btn btn-primary btn-block mt-5 disabled:opacity-60">
+                <button type="submit" disabled={pending} className="btn btn-block mt-5 disabled:opacity-60">
                   <RollingLabel>{pending ? "Sending…" : "Request appointment"}</RollingLabel>
                   <RollingChip />
                 </button>
@@ -353,7 +349,7 @@ export function BookOnline() {
 }
 
 const fieldClass =
-  "w-full border border-forest/18 bg-cream-50/70 px-2.5 py-2 text-[12.5px] text-forest outline-none transition-colors placeholder:text-muted/45 focus:border-forest/45 focus:bg-cream-50";
+  "w-full border-0 border-b border-ink bg-transparent px-0 py-2 text-[1.05rem] leading-tight outline-none transition-colors placeholder:text-ink/35 focus:border-forest";
 
 function BookingField({
   label,
@@ -372,12 +368,12 @@ function BookingField({
     <div className={className}>
       <label
         htmlFor={name}
-        className="block text-[8.5px] font-extrabold uppercase tracking-[0.12em] text-muted"
+        className="block font-sans text-[0.7rem] font-extrabold uppercase leading-none tracking-normal text-ink"
       >
         {label}
       </label>
       <div className="mt-1">{children}</div>
-      {error ? <p className="mt-1 text-[10.5px] text-[#8A4A4A]">{error}</p> : null}
+      {error ? <p className="field-error mt-1">{error}</p> : null}
     </div>
   );
 }
@@ -420,10 +416,10 @@ function CalendarPanel({
               <div className="animate-step-in">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[9px] font-extrabold uppercase tracking-[0.18em] text-muted">
+                    <p className="eyebrow text-ink/60">
                       Select a date
                     </p>
-                    <h3 className="mt-1 font-display text-[1.4rem] font-extrabold tracking-[-0.045em] text-forest">
+                    <h3 className="mt-2 text-[1.4rem] font-bold leading-none">
                       {MONTHS[month.m]} {month.y}
                     </h3>
                   </div>
@@ -436,7 +432,7 @@ function CalendarPanel({
                         const date = new Date(Date.UTC(month.y, month.m - 1, 1));
                         setMonth({ y: date.getUTCFullYear(), m: date.getUTCMonth() });
                       }}
-                      className="grid size-8 place-items-center rounded-full border border-forest/20 text-[12px] text-forest transition-colors hover:bg-forest hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest"
+                      className="grid size-8 place-items-center border border-ink text-[12px] transition-colors hover:bg-forest hover:text-paper disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-ink"
                     >
                       ←
                     </button>
@@ -448,14 +444,14 @@ function CalendarPanel({
                         const date = new Date(Date.UTC(month.y, month.m + 1, 1));
                         setMonth({ y: date.getUTCFullYear(), m: date.getUTCMonth() });
                       }}
-                      className="grid size-8 place-items-center rounded-full border border-forest/20 text-[12px] text-forest transition-colors hover:bg-forest hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-forest"
+                      className="grid size-8 place-items-center border border-ink text-[12px] transition-colors hover:bg-forest hover:text-paper disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-ink"
                     >
                       →
                     </button>
                   </div>
                 </div>
 
-                <div className="mt-5 grid grid-cols-7 gap-1 text-center text-[8px] font-extrabold uppercase tracking-[0.12em] text-muted">
+                <div className="mt-6 grid grid-cols-7 gap-1 text-center font-sans text-[0.65rem] font-extrabold uppercase tracking-normal text-ink/60">
                   {WEEKDAY_INITIALS.map((label, index) => (
                     <span key={`${label}-${index}`}>{label}</span>
                   ))}
@@ -479,13 +475,13 @@ function CalendarPanel({
                           onSelectDay(date);
                         }}
                         className={cn(
-                          "relative mx-auto grid size-9 place-items-center rounded-full text-[11.5px] tabular-nums transition-all duration-200",
+                          "relative mx-auto grid size-9 place-items-center text-[0.8rem] tabular-nums transition-colors duration-200",
                           active
-                            ? "bg-forest text-cream"
+                            ? "bg-forest text-paper"
                             : enabled
-                              ? "text-forest/80 hover:bg-forest/8"
-                              : "cursor-not-allowed text-muted/30",
-                          isToday && !active && "ring-1 ring-clay/40",
+                              ? "hover:bg-ink/8"
+                              : "cursor-not-allowed text-ink/25",
+                          isToday && !active && "underline underline-offset-4",
                         )}
                       >
                         {day}
@@ -494,19 +490,19 @@ function CalendarPanel({
                   })}
                 </div>
 
-                <div className="mt-5 flex items-center justify-between border-t border-forest/15 pt-3">
-                  <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted">
+                <div className="mt-6 flex items-center justify-between border-t border-ink pt-3">
+                  <p className="eyebrow text-ink/60">
                     Available times
                     {selected ? ` · ${MONTHS[selected.m].slice(0, 3)} ${selected.d}` : ""}
                   </p>
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-muted/60">
+                  <span className="font-sans text-[0.65rem] font-bold uppercase tracking-normal text-ink/50">
                     {SLOT_MINUTES} min
                   </span>
                 </div>
 
                 <div className="mt-2.5 grid max-h-[10.5rem] grid-cols-4 gap-1.5 overflow-y-auto pr-1">
                   {slots.length === 0 ? (
-                    <p className="col-span-full py-1 text-[11.5px] leading-relaxed text-muted">
+                    <p className="col-span-full py-1 text-[0.95rem] leading-relaxed text-ink/60">
                       No times left on this day. Try the next one.
                     </p>
                   ) : (
@@ -518,7 +514,7 @@ function CalendarPanel({
                           onPickSlot(time);
                         }}
                         style={{ animationDelay: `${index * 35}ms` }}
-                        className="animate-slot-in border border-forest/18 py-2 text-center text-[10px] font-semibold tabular-nums text-forest/75 transition-colors hover:border-forest hover:bg-forest hover:text-cream"
+                        className="animate-slot-in border border-ink/30 py-2 text-center font-sans text-[0.75rem] font-bold tabular-nums transition-colors hover:border-ink hover:bg-forest hover:text-paper"
                       >
                         {time}
                       </button>

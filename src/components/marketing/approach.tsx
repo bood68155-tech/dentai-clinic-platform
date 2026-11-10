@@ -35,7 +35,7 @@ export function Approach() {
     >
       <div className="mx-auto grid w-full max-w-[90rem] gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-20">
         <Reveal className="order-2 lg:order-1 lg:sticky lg:top-28">
-          <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-sand">
+          <div className="img-zoom relative aspect-[4/5] overflow-hidden bg-sand">
             <Image
               src="/images/dental-clean.jpg"
               alt="A hygienist carrying out a professional clean during a calm appointment"
@@ -44,7 +44,7 @@ export function Approach() {
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-forest/30 via-transparent to-transparent" />
-            <div className="absolute right-5 bottom-5 left-5 flex items-center justify-between gap-4 rounded-[1.2rem] border border-cream/35 bg-cream/90 px-4 py-3 text-forest backdrop-blur-md sm:right-6 sm:bottom-6 sm:left-6">
+            <div className="absolute right-5 bottom-5 left-5 flex items-center justify-between gap-4 border border-ink bg-paper px-4 py-3 sm:right-6 sm:bottom-6 sm:left-6">
               <p className="text-[9px] font-extrabold uppercase tracking-[0.18em]">
                 The first visit
               </p>
