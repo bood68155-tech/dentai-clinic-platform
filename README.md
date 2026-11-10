@@ -164,6 +164,14 @@ Sign-in security details:
 ⚠️ Demo credentials only — change them and never seed demo data into a real
 deployment.
 
+### A real admin account on a connected database
+
+`npm run db:create-admin` inserts `admin@dentai.com` as a clinic owner (default
+password `admin123`, overridable with `ADMIN_PASSWORD`) and resets the password
+if the account already exists. It attaches to the oldest clinic, or to
+`ADMIN_CLINIC_SLUG` if set, and creates a minimal practice row when the database
+has never been seeded.
+
 ### Developer sign-in without a database
 
 Until `DATABASE_URL` is set, `npm run dev` accepts `admin@dentai.com` /
@@ -185,6 +193,7 @@ account created by the seed script.
 | `npm run db:push`    | Push the schema straight to the database             |
 | `npm run db:migrate` | Apply the committed migrations in `drizzle/`         |
 | `npm run db:seed`    | (Re)create the demo clinic — idempotent, demo only   |
+| `npm run db:create-admin` | Create/reset `admin@dentai.com` as clinic owner  |
 | `npm run db:studio`  | Drizzle Studio                                       |
 
 ## Deploying to Vercel
