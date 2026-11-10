@@ -190,7 +190,7 @@ export function BookOnline() {
 
             <div className="flex items-center gap-2.5">
               <Image
-                src="/images/dental-team.jpg"
+                src="/images/reception-close.webp"
                 alt=""
                 width={42}
                 height={42}

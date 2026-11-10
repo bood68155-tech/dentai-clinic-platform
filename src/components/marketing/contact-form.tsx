@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { sendContactMessageAction } from "@/app/contact/actions";
+import { Roll } from "@/components/marketing/roll";
 import { initialContactState } from "@/lib/form-state";
 
 const HEARD = [
@@ -15,9 +16,10 @@ const HEARD = [
 ];
 
 /**
- * Contact form matching the reference layout: label and value share one
- * ruled row, the first cell of every pair carries the divider, and the
- * select sits behind its own hairline with a chevron at the far edge.
+ * The reference contact form in full: paired name and contact rows, a
+ * full-width "how did you hear about us" select, subject, and a ruled message
+ * box. Labels sit at the left edge of each row and the value fills the rest,
+ * with a single hairline under every row.
  */
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(
@@ -27,27 +29,19 @@ export function ContactForm() {
 
   if (state.status === "success") {
     return (
-      <div className="flex min-h-[25rem] items-start">
-        <p className="lede text-clay">{state.message}</p>
+      <div className="flex min-h-[20rem] items-start border-t border-[color:var(--ref-border)] pt-6">
+        <p className="paragraph-lg text-[color:var(--ref-gold)]">{state.message}</p>
       </div>
     );
   }
 
   const error = (name: string) =>
-    state.errors?.[name] ? (
-      <span className="field-error">{state.errors[name]}</span>
-    ) : null;
+    state.errors?.[name] ? <span className="input-error">{state.errors[name]}</span> : null;
 
   return (
-    <form action={formAction} noValidate className="grid grid-cols-1 sm:grid-cols-2">
-      {state.status === "error" && state.errors === undefined ? (
-        <p role="alert" className="form-error sm:col-span-2">
-          {state.message}
-        </p>
-      ) : null}
-
-      <div className="field sm:border-r sm:border-ink sm:pr-6">
-        <label htmlFor="firstName" className="field-label">
+    <form action={formAction} noValidate className="form-contact">
+      <div className="input-group cell-divide">
+        <label htmlFor="firstName" className="input-label">
           First Name*
         </label>
         <input
@@ -57,13 +51,14 @@ export function ContactForm() {
           required
           maxLength={256}
           autoComplete="given-name"
-          className="field-input"
+          className="input-form"
           aria-invalid={state.errors?.firstName ? true : undefined}
         />
+        {error("firstName")}
       </div>
 
-      <div className="field sm:pl-6">
-        <label htmlFor="lastName" className="field-label">
+      <div className="input-group">
+        <label htmlFor="lastName" className="input-label">
           Last Name*
         </label>
         <input
@@ -73,13 +68,14 @@ export function ContactForm() {
           required
           maxLength={256}
           autoComplete="family-name"
-          className="field-input"
+          className="input-form"
           aria-invalid={state.errors?.lastName ? true : undefined}
         />
+        {error("lastName")}
       </div>
 
-      <div className="field sm:border-r sm:border-ink sm:pr-6">
-        <label htmlFor="email" className="field-label">
+      <div className="input-group cell-divide">
+        <label htmlFor="email" className="input-label">
           Email*
         </label>
         <input
@@ -89,13 +85,14 @@ export function ContactForm() {
           required
           maxLength={256}
           autoComplete="email"
-          className="field-input"
+          className="input-form"
           aria-invalid={state.errors?.email ? true : undefined}
         />
+        {error("email")}
       </div>
 
-      <div className="field sm:pl-6">
-        <label htmlFor="phone" className="field-label">
+      <div className="input-group">
+        <label htmlFor="phone" className="input-label">
           Phone
         </label>
         <input
@@ -104,15 +101,17 @@ export function ContactForm() {
           type="tel"
           maxLength={256}
           autoComplete="tel"
-          className="field-input"
+          className="input-form"
+          aria-invalid={state.errors?.phone ? true : undefined}
         />
+        {error("phone")}
       </div>
 
-      <div className="field relative sm:col-span-2">
-        <label htmlFor="hear" className="field-label">
+      <div className="input-group col-span-full">
+        <label htmlFor="hear" className="input-label">
           How did you hear about us?
         </label>
-        <select id="hear" name="hear" defaultValue="" className="field-input pr-10">
+        <select id="hear" name="hear" defaultValue="" className="input">
           <option value="">Select one...</option>
           {HEARD.map((option) => (
             <option key={option} value={option}>
@@ -120,20 +119,10 @@ export function ContactForm() {
             </option>
           ))}
         </select>
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          className="pointer-events-none absolute right-0 top-1/2 size-6 -translate-y-1/2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M5 9l7 7 7-7" strokeLinecap="square" />
-        </svg>
       </div>
 
-      <div className="field sm:col-span-2">
-        <label htmlFor="subject" className="field-label">
+      <div className="input-group col-span-full">
+        <label htmlFor="subject" className="input-label">
           Subject*
         </label>
         <input
@@ -142,13 +131,14 @@ export function ContactForm() {
           type="text"
           required
           maxLength={256}
-          className="field-input"
+          className="input-form"
           aria-invalid={state.errors?.subject ? true : undefined}
         />
+        {error("subject")}
       </div>
 
-      <div className="field field-area sm:col-span-2">
-        <label htmlFor="message" className="field-label">
+      <div className="input-group textarea col-span-full">
+        <label htmlFor="message" className="input-label">
           Message*
         </label>
         <textarea
@@ -157,24 +147,21 @@ export function ContactForm() {
           required
           maxLength={5000}
           placeholder="Start typing your message..."
+          className="input-form-message"
           aria-invalid={state.errors?.message ? true : undefined}
         />
         {error("message")}
       </div>
 
-      {(state.errors?.firstName ||
-        state.errors?.lastName ||
-        state.errors?.email ||
-        state.errors?.phone ||
-        state.errors?.subject) && (
-        <p role="alert" className="field-error sm:col-span-2 pt-2">
+      {state.errors && Object.keys(state.errors).length > 0 ? (
+        <p role="alert" className="form-error-box col-span-full">
           {state.message}
         </p>
-      )}
+      ) : null}
 
-      <div className="mt-10 sm:col-span-2">
-        <button type="submit" disabled={pending} className="btn">
-          {pending ? "Please wait..." : "Submit"}
+      <div className="col-span-full mt-8">
+        <button type="submit" disabled={pending} className="button">
+          <Roll>{pending ? "Sending..." : "Submit"}</Roll>
         </button>
       </div>
     </form>

@@ -1,83 +1,110 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { BookOnline } from "@/components/marketing/book-online";
-import { RollingLabel } from "@/components/rolling-label";
+import { Roll } from "@/components/marketing/roll";
 
-const NAV = [
-  { label: "Treatments", href: "/#treatments" },
-  { label: "Approach", href: "/#approach" },
-  { label: "Visit", href: "/#visit" },
+export const MARKETING_NAV = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "New Patients", href: "/new-patients" },
   { label: "Contact", href: "/contact" },
-  { label: "Clinic", href: "/clinic" },
-];
+] as const;
 
 /**
- * Sticky bar lifted from the reference site: cream ground, one hairline rule
- * along the bottom, Manrope links spread evenly across the row and a gold
- * text-only Book Online action at the end. No logo mark, no pill, no shadow.
+ * Reference navigation: no logo on desktop, six equal two-column cells with the
+ * gold Book Online last, and a single hairline under the bar. On small screens
+ * it collapses to Menu / Book Online.
  */
 export function SiteHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.documentElement.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-ink bg-paper">
-        <div className="shell flex items-center justify-between gap-8 py-3 lg:py-4">
-          <Link
-            href="/"
-            className="font-display text-[1.375rem] font-extrabold leading-none tracking-[-0.05em] text-ink transition-colors duration-300 hover:text-forest"
-          >
-            Dentai
-          </Link>
+      <a href="#main" className="skip-link">
+        Skip to Main Content
+      </a>
 
-          <nav
-            aria-label="Primary"
-            className="hidden flex-1 grid-cols-5 items-center lg:grid"
-          >
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="font-sans text-base font-bold leading-none tracking-[-0.05em] text-ink transition-colors duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:text-forest"
-              >
+      <header className="nav">
+        <div className="container">
+          <nav aria-label="Primary" className="nav-desktop row flush">
+            {MARKETING_NAV.map((item) => (
+              <div key={item.href} className="col col-2">
+                <Link href={item.href} className="nav-link">
+                  {item.label}
+                </Link>
+              </div>
+            ))}
+            <div className="col col-2">
+              <button type="button" data-book-online className="nav-link gold">
+                Book Online
+              </button>
+            </div>
+          </nav>
+
+          <div className="nav-mobile callout-bar">
+            <button
+              type="button"
+              className="menu-toggle"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(true)}
+            >
+              Menu
+            </button>
+            <button type="button" data-book-online className="button">
+              <Roll>Book Online</Roll>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {menuOpen ? (
+        <div className="mobile-panel" role="dialog" aria-modal="true" aria-label="Menu">
+          <div className="mobile-panel__top">
+            <button type="button" className="menu-toggle" onClick={() => setMenuOpen(false)}>
+              Close
+            </button>
+            <button type="button" data-book-online className="button" onClick={() => setMenuOpen(false)}>
+              <Roll>Book Online</Roll>
+            </button>
+          </div>
+          <nav className="flex flex-col" aria-label="Mobile">
+            {MARKETING_NAV.map((item) => (
+              <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
                 {item.label}
               </Link>
             ))}
           </nav>
-
-          <div className="flex items-center gap-6">
-            <button type="button" data-book-online className="btn btn-book">
-              <RollingLabel>Book Online</RollingLabel>
-            </button>
-
-            <details className="relative lg:hidden">
-              <summary className="cursor-pointer font-sans text-base font-bold leading-none tracking-[-0.05em] text-ink">
-                Menu
-              </summary>
-              <div className="absolute right-0 top-full z-50 mt-3 w-60 border border-ink bg-paper px-5 py-4">
-                <ul className="flex flex-col">
-                  {NAV.map((item) => (
-                    <li key={item.href} className="border-b border-ink/15 last:border-0">
-                      <Link
-                        href={item.href}
-                        className="block py-2.5 font-sans text-base font-bold tracking-[-0.05em]"
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                  <li className="border-t border-ink/15">
-                    <Link
-                      href="/login"
-                      className="block py-2.5 font-sans text-base font-bold tracking-[-0.05em]"
-                    >
-                      Sign in
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </details>
+          <div className="mt-auto flex flex-col gap-2">
+            <Link href="/book" onClick={() => setMenuOpen(false)}>
+              Appointment
+            </Link>
+            <Link href="/login" onClick={() => setMenuOpen(false)}>
+              Patient sign in
+            </Link>
+            <Link href="/clinic" onClick={() => setMenuOpen(false)}>
+              Clinic platform
+            </Link>
           </div>
         </div>
-      </header>
+      ) : null}
 
       <BookOnline />
     </>

@@ -35,7 +35,7 @@ export default async function LoginPage() {
     <div className="flex flex-1 flex-col">
       <SiteHeader />
 
-      <main className="flex-1 font-sans">
+      <main id="main" className="flex-1 font-sans">
         <div className="mx-auto grid w-full max-w-[82rem] gap-12 px-6 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Link

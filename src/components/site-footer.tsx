@@ -1,135 +1,173 @@
-import Link from "next/link";
+"use client";
 
-import { ArrowRight, ToothMark } from "@/components/icons";
+import Link from "next/link";
+import { useState } from "react";
+
+import { MARKETING_NAV } from "@/components/site-header";
+import { Wordmark } from "@/components/marketing/wordmark";
 import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 
-// Resolved at build time so the marketing page can stay fully static.
-const COPYRIGHT_YEAR = new Date().getFullYear();
+const COPYRIGHT_YEAR = 2026;
 
+/**
+ * The reference's closing green plate: full-viewport, an edge-to-edge wordmark
+ * with a script line riding its top edge, the same six nav cells, a four-column
+ * meta row and a full-bleed legal bar.
+ */
 export function SiteFooter() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
   return (
-    <footer className="mt-auto overflow-hidden bg-forest text-cream">
-      <div className="mx-auto w-full max-w-[90rem] px-6 pt-14 sm:px-10 lg:px-16 lg:pt-20">
-        <div className="grid gap-12 border-b border-cream/15 pb-12 lg:grid-cols-[1.1fr_2fr] lg:gap-20">
+    <footer className="section footer">
+      <div className="container">
+        <div className="footer-head">
+          <Link href="/" className="footer-wordmark" aria-label="Dentai home">
+            <span className="footer-script">Dentistry — Not Routine</span>
+            <Wordmark />
+          </Link>
+
+          <div className="footer-nav row flush">
+            {MARKETING_NAV.map((item) => (
+              <div key={item.href} className="col col-2">
+                <Link href={item.href} className="nav-link">
+                  {item.label}
+                </Link>
+              </div>
+            ))}
+            <div className="col col-2">
+              <Link href="/our-team" className="nav-link">
+                Our Team
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-grid">
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="grid size-8 place-items-center rounded-full border border-cream/25">
-                <ToothMark className="size-[1.15rem]" />
-              </span>
-              <span className="font-display text-[1.35rem] font-extrabold tracking-[-0.055em]">
-                Dentai
-              </span>
-            </div>
-            <p className="font-editorial mt-5 max-w-[18rem] text-[1.1rem] leading-[1.45] text-cream/65">
-              General, cosmetic and restorative dentistry in SoHo, New York. Calm rooms,
-              clear plans, no rush.
+            <h3 className="h3">Contact</h3>
+            <div className="rule" />
+            <ul className="paragraph-sm paragraph-short space-y-1">
+              <li>
+                <a href={CLINIC_PROFILE.phoneHref}>{CLINIC_PROFILE.phone}</a>
+              </li>
+              <li>
+                <a href={`mailto:${CLINIC_PROFILE.email}`}>{CLINIC_PROFILE.email}</a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">
+                  @dentai.clinic
+                </a>
+              </li>
+            </ul>
+            <ul className="mt-4 flex gap-1">
+              <li>
+                <a
+                  href="https://www.instagram.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Instagram"
+                  className="block w-6"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                  className="block w-6"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l.6-3.5h-3.1V7.8c0-.8.3-1.3 1.3-1.3H15Z" />
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="h3">Address</h3>
+            <div className="rule" />
+            <p className="paragraph-sm paragraph-short">
+              {CLINIC_PROFILE.address[0]}
+              <br />
+              {CLINIC_PROFILE.address[1]}
             </p>
-            <Link
-              href="/book"
-              className="link-underline mt-6 text-[11px] text-clay-soft hover:text-cream"
-            >
-              Book a visit
-              <ArrowRight className="size-3.5" />
-            </Link>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-3">
-            <div>
-              <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-cream/40">
-                Explore
-              </p>
-              <ul className="mt-4 space-y-2.5 text-[12px] text-cream/75">
-                <li>
-                  <Link href="/book" className="transition-colors hover:text-clay-soft">
-                    Book a visit
-                  </Link>
-                </li>
-                <li>
-                  <a href="#treatments" className="transition-colors hover:text-clay-soft">
-                    Treatments
-                  </a>
-                </li>
-                <li>
-                  <a href="#approach" className="transition-colors hover:text-clay-soft">
-                    Our approach
-                  </a>
-                </li>
-                <li>
-                  <a href="#visit" className="transition-colors hover:text-clay-soft">
-                    Visiting the clinic
-                  </a>
-                </li>
-                <li>
-                  <Link href="/contact" className="transition-colors hover:text-clay-soft">
-                    Contact &amp; directions
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/clinic" className="transition-colors hover:text-clay-soft">
-                    Clinic platform
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <div>
+            <h3 className="h3">Hours</h3>
+            <div className="rule" />
+            <p className="paragraph-sm paragraph-short">
+              Mon to Wed: 9 am – 6 pm
+              <br />
+              Thu: 9 am – 7 pm
+              <br />
+              Fri: 9 am – 4 pm · Sat: 9 am – 1 pm
+            </p>
+          </div>
 
-            <div>
-              <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-cream/40">
-                Clinic
-              </p>
-              <ul className="mt-4 space-y-2.5 text-[12px] text-cream/75">
-                <li>{CLINIC_PROFILE.address[0]}</li>
-                <li>{CLINIC_PROFILE.address[1]}</li>
-                <li>
-                  <a
-                    href={CLINIC_PROFILE.phoneHref}
-                    className="transition-colors hover:text-clay-soft"
-                  >
-                    {CLINIC_PROFILE.phone}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${CLINIC_PROFILE.email}`}
-                    className="transition-colors hover:text-clay-soft"
-                  >
-                    {CLINIC_PROFILE.email}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-[9px] font-extrabold uppercase tracking-[0.22em] text-cream/40">
-                Hours
-              </p>
-              <ul className="mt-4 space-y-2 text-[11.5px] text-cream/75">
-                {CLINIC_PROFILE.hours.map((entry) => (
-                  <li key={entry.days} className="flex justify-between gap-3">
-                    <span>{entry.days.split(" – ")[0].slice(0, 3)}</span>
-                    <span className="tabular-nums text-cream/50">{entry.time}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div>
+            <h3 className="h3">Newsletter</h3>
+            <div className="rule" />
+            <p className="paragraph-sm paragraph-short mb-3">
+              Want to know about the goings on around the clinic? Get the Dentai news.
+            </p>
+            {subscribed ? (
+              <p className="paragraph-md form-success">Thank you! Your submission has been received!</p>
+            ) : (
+              <form
+                className="flex flex-col items-start gap-3"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (!email.includes("@")) return;
+                  setSubscribed(true);
+                }}
+              >
+                <label className="sr-only" htmlFor="footer-email">
+                  Email Address
+                </label>
+                <input
+                  id="footer-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="Email Address"
+                  className="newsletter-input"
+                />
+                <button type="submit" className="button">
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </div>
+      </div>
 
-        <div className="pt-10">
-          <p className="animate-line-grow select-none font-display text-[clamp(5.2rem,17vw,15rem)] font-extrabold leading-[0.68] tracking-[-0.09em] text-cream">
-            Dentai
-          </p>
-        </div>
-
-        <div className="mt-8 flex flex-col gap-4 border-t border-cream/15 py-6 text-[10px] text-cream/45 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {COPYRIGHT_YEAR} Dentai Clinic. All rights reserved.</p>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span>Care, considered.</span>
-            <Link href="/login" className="transition-colors hover:text-cream">
-              Patient sign in
-            </Link>
-            <Link href="/book" className="transition-colors hover:text-cream">
-              Book online
-            </Link>
+      <div className="container full footer-bottom">
+        <div className="container">
+          <div className="row flush">
+            <div className="col col-2">
+              <p className="paragraph-sm paragraph-short mb-0">© Dentai {COPYRIGHT_YEAR}</p>
+            </div>
+            <div className="col col-6">
+              <Link href="/privacy" className="paragraph-sm paragraph-short mb-0 no-underline">
+                Privacy Policy
+              </Link>
+            </div>
+            <div className="col col-4 text-right">
+              <span className="paragraph-sm paragraph-short mb-0">
+                Designed with care in SoHo, New York
+              </span>
+            </div>
           </div>
         </div>
       </div>

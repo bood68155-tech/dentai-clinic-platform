@@ -64,7 +64,7 @@ export default async function AccountLayout({
         </div>
       </header>
 
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <div className="mx-auto w-full max-w-6xl px-6 py-10 lg:py-14">{children}</div>
       </main>
 

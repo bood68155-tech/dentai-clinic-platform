@@ -27,7 +27,7 @@ export default function BookPage(props: {
     <div className="flex flex-1 flex-col">
       <SiteHeader />
 
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <div className="mx-auto grid w-full max-w-[82rem] gap-12 px-6 py-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20 lg:px-10 lg:py-24">
           <div>
             <Link
