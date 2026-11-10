@@ -37,8 +37,8 @@ export function Approach() {
         <Reveal className="order-2 lg:order-1 lg:sticky lg:top-28">
           <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-sand">
             <Image
-              src="/images/care-mirror.webp"
-              alt="A dentist smiling with a patient as she checks her smile in a mirror"
+              src="/images/dental-clean.jpg"
+              alt="A hygienist carrying out a professional clean during a calm appointment"
               fill
               sizes="(min-width: 1024px) 42vw, 100vw"
               className="object-cover"

@@ -13,6 +13,19 @@ export const CLINIC_PROFILE = {
     { days: "Saturday", time: "09:00 – 13:00" },
     { days: "Sunday", time: "Closed" },
   ],
+  /**
+   * Same opening hours as the displayed list, keyed by weekday (0 = Sunday) for the
+   * online scheduler. Closed days are null.
+   */
+  schedule: {
+    0: null,
+    1: ["09:00", "18:00"],
+    2: ["09:00", "18:00"],
+    3: ["09:00", "18:00"],
+    4: ["09:00", "19:00"],
+    5: ["09:00", "16:00"],
+    6: ["09:00", "13:00"],
+  } as Record<number, [string, string] | null>,
   services: [
     {
       code: "01",

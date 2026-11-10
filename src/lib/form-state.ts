@@ -43,3 +43,11 @@ export type BookingState = {
 };
 
 export const initialBookingState: BookingState = { status: "idle" };
+
+export type ContactState = {
+  status: "idle" | "error" | "success";
+  message?: string;
+  errors?: Record<string, string>;
+};
+
+export const initialContactState: ContactState = { status: "idle" };

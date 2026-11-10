@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { ArrowRight } from "@/components/icons";
 import { Reveal } from "@/components/reveal";
@@ -8,8 +7,8 @@ export function CareBand() {
   return (
     <section className="relative isolate overflow-hidden bg-forest">
       <Image
-        src="/images/smiling-patient.webp"
-        alt="A patient laughing with his dental hygienist during a check-up"
+        src="/images/dental-smile.jpg"
+        alt="A patient smiling after treatment, photographed in natural light"
         fill
         sizes="100vw"
         className="object-cover object-[58%_center]"
@@ -30,13 +29,14 @@ export function CareBand() {
             </p>
             <p className="text-[10.5px] text-cream/55">Patient since 2021</p>
           </div>
-          <Link
-            href="/book"
+          <button
+            type="button"
+            data-book-online
             className="link-underline mt-8 text-[11px] text-clay-soft hover:text-cream"
           >
             Book your first visit
             <ArrowRight className="size-3.5" />
-          </Link>
+          </button>
         </Reveal>
       </div>
     </section>

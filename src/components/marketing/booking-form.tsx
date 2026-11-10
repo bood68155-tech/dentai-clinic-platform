@@ -5,7 +5,8 @@ import { useActionState } from "react";
 
 import { bookAppointmentAction } from "@/app/book/actions";
 import { initialBookingState } from "@/lib/form-state";
-import { ArrowRight, CheckIcon } from "@/components/icons";
+import { CheckIcon } from "@/components/icons";
+import { RollingChip, RollingLabel } from "@/components/rolling-label";
 import { BOOKABLE_TIMES } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -92,8 +93,8 @@ export function BookingForm({
           should know before your visit.
         </p>
         <Link href="/" className="btn btn-outline btn-sm mt-6">
-          Back to the clinic
-          <ArrowRight className="size-3.5" />
+          <RollingLabel>Back to the clinic</RollingLabel>
+          <RollingChip />
         </Link>
       </div>
     );
@@ -229,8 +230,8 @@ export function BookingForm({
           disabled={pending}
           className={cn("btn btn-primary", pending && "opacity-60")}
         >
-          {pending ? "Sending…" : "Request appointment"}
-          <ArrowRight className="btn-arrow size-4" />
+          <RollingLabel>{pending ? "Sending…" : "Request appointment"}</RollingLabel>
+          <RollingChip />
         </button>
         <span className="text-[10.5px] leading-snug text-muted">
           No payment is taken online.

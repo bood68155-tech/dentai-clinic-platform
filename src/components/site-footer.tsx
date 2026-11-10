@@ -60,6 +60,11 @@ export function SiteFooter() {
                   </a>
                 </li>
                 <li>
+                  <Link href="/contact" className="transition-colors hover:text-clay-soft">
+                    Contact &amp; directions
+                  </Link>
+                </li>
+                <li>
                   <Link href="/clinic" className="transition-colors hover:text-clay-soft">
                     Clinic platform
                   </Link>

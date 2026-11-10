@@ -28,8 +28,8 @@ export function Services() {
           <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <div className="img-zoom relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-sand">
               <Image
-                src="/images/clinic-interior.webp"
-                alt="A bright, modern treatment room at the Dentai clinic"
+                src="/images/dental-room.jpg"
+                alt="A bright, modern dental treatment room with a chair and clinical light"
                 fill
                 sizes="(min-width: 1024px) 38vw, 100vw"
                 className="object-cover"

@@ -1,8 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
-
 import { ArrowRight } from "@/components/icons";
 import { AvailabilityCard } from "@/components/marketing/availability-card";
+import { RollingChip, RollingLabel } from "@/components/rolling-label";
 
 const HERO_STATS = [
   ["4.9 / 5", "from 340 patient reviews"],
@@ -34,10 +33,10 @@ export function Hero() {
           </p>
 
           <div className="animate-fade-up animate-delay-300 mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-            <Link href="/book" className="btn btn-light btn-lg">
-              Book a visit
-              <ArrowRight className="btn-arrow size-4" />
-            </Link>
+            <button type="button" data-book-online className="btn btn-light btn-lg btn-book">
+              <RollingLabel>Book online</RollingLabel>
+              <RollingChip />
+            </button>
             <a
               href="#treatments"
               className="group inline-flex items-center gap-2 border-b border-cream/30 pb-1 text-[12px] font-bold uppercase tracking-[0.15em] text-cream/75 transition-colors hover:border-clay-soft hover:text-cream"
@@ -65,8 +64,8 @@ export function Hero() {
 
       <div className="relative w-full min-h-[34rem] overflow-hidden bg-sand lg:min-h-0 lg:col-span-1 lg:min-h-0">
         <Image
-          src="/images/hero-dental.webp"
-          alt="A smiling dental patient during a calm appointment with her dentist"
+          src="/images/dental-hero.jpg"
+          alt="A dentist and patient talking through a treatment plan in a calm, light-filled room"
           fill
           priority
           sizes="(min-width: 1024px) 50vw, 100vw"

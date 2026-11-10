@@ -1,7 +1,6 @@
-import Link from "next/link";
-
-import { ArrowRight, ClockIcon, PhoneIcon, PinIcon } from "@/components/icons";
+import { ClockIcon, PhoneIcon, PinIcon } from "@/components/icons";
 import { Reveal } from "@/components/reveal";
+import { RollingChip, RollingLabel } from "@/components/rolling-label";
 import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 
 export function Visit() {
@@ -25,10 +24,10 @@ export function Visit() {
               through what matters to you, and make a plan you feel good about.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Link href="/book" className="btn btn-primary btn-lg">
-                Book online
-                <ArrowRight className="btn-arrow size-4" />
-              </Link>
+              <button type="button" data-book-online className="btn btn-primary btn-lg btn-book">
+                <RollingLabel>Book online</RollingLabel>
+                <RollingChip />
+              </button>
               <a href={CLINIC_PROFILE.phoneHref} className="btn btn-outline btn-lg">
                 <PhoneIcon className="size-4" />
                 {CLINIC_PROFILE.phone}
