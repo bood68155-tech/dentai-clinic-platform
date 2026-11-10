@@ -31,14 +31,18 @@ const MAX_TURNS = 22;
 const MAX_CHARS = 1200;
 const BOOKING_HORIZON_DAYS = 60;
 const TOOL_ROUNDS = 4;
-const REQUEST_TIMEOUT_MS = 30_000;
+// Reasoning models can spend 20s+ before the first visible answer, so a tighter
+// budget turns working calls into 502s on the live widget.
+const REQUEST_TIMEOUT_MS = 60_000;
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^\d{2}:\d{2}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const DEFAULT_BASE_URL = "https://api.z.ai/api/paas/v4";
-const DEFAULT_MODEL = "glm-4.6";
+// glm-4.5-flash is the free-tier GLM model and supports function calling; the
+// larger glm-4.6 needs paid credit on the same key.
+const DEFAULT_MODEL = "glm-4.5-flash";
 
 export class AssistantError extends Error {
   constructor(message: string, readonly cause?: unknown) {
@@ -202,7 +206,9 @@ async function callModel(messages: ChatMessage[]): Promise<ChatMessage> {
         tools: TOOLS,
         tool_choice: "auto",
         temperature: 0.3,
-        max_tokens: 600,
+        // Generous enough that a reasoning model's thinking cannot eat the whole
+        // budget and truncate the answer; unused tokens are not billed.
+        max_tokens: 1200,
       }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       cache: "no-store",

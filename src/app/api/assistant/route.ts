@@ -17,6 +17,10 @@ import { AssistantError, isAssistantConfigured, readConversation, runAssistant }
 // `dynamic` segment config here. Reading the request body already makes this
 // handler dynamic.
 
+// A reasoning model can take 30s per round before a tool call, and the default
+// serverless budget is shorter than that.
+export const maxDuration = 60;
+
 const WINDOW_MS = 5 * 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 20;
 
