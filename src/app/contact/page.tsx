@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { ContactForm } from "@/components/marketing/contact-form";
 import { Roll } from "@/components/marketing/roll";
 import { SiteFooter } from "@/components/site-footer";
@@ -210,6 +211,7 @@ export default function ContactPage() {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

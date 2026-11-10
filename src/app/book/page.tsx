@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { BookingForm } from "@/components/marketing/booking-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -88,6 +89,7 @@ export default function BookPage(props: {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

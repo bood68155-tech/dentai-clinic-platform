@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { Carousel } from "@/components/marketing/carousel";
 import { HeroSplit } from "@/components/marketing/hero-split";
 import { ArrowIcon, Roll } from "@/components/marketing/roll";
@@ -218,6 +219,7 @@ export default function AboutPage() {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

@@ -198,6 +198,20 @@ deployment.
 The driver uses `max: 1` and `prepare: false`, which keeps serverless functions safe
 behind transaction-mode poolers.
 
+## Conversational booking assistant
+
+The floating "Ask Dentai" widget on the marketing pages posts to
+`POST /api/assistant`. It answers clinic questions from `src/lib/clinic-profile.ts`
+and books appointments through the same `requestAppointment` mutation as the public
+form, checking open slots first. The model runs server-side only; no key reaches the
+browser. Configure it with the variables in `.env.example`:
+
+| Variable | Purpose |
+| --- | --- |
+| `ASSISTANT_API_KEY` | Key for an OpenAI-compatible provider. Empty disables the widget gracefully. |
+| `ASSISTANT_BASE_URL` | Provider base URL, e.g. `https://api.z.ai/api/paas/v4`. |
+| `ASSISTANT_MODEL` | Model id that supports function calling. |
+
 ## Project structure
 
 ```

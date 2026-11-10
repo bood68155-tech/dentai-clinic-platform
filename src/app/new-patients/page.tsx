@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { HeroSplit } from "@/components/marketing/hero-split";
 import { Roll } from "@/components/marketing/roll";
 import { SiteFooter } from "@/components/site-footer";
@@ -156,6 +157,7 @@ export default function NewPatientsPage() {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

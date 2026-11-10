@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { Roll } from "@/components/marketing/roll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -112,6 +113,7 @@ export default function OurTeamPage() {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

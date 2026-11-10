@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AssistantWidget } from "@/components/marketing/assistant-widget";
 import { Carousel } from "@/components/marketing/carousel";
 import { ArrowIcon, Roll } from "@/components/marketing/roll";
 import { WhyScroller } from "@/components/marketing/why-scroller";
@@ -203,6 +204,7 @@ export default function HomePage() {
       </main>
 
       <SiteFooter />
+      <AssistantWidget />
     </div>
   );
 }

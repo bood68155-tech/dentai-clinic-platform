@@ -107,11 +107,17 @@ export const getPatientImages = cache(
 
 // ── Clinic queries restored for the rest of the app ──────────────────────────
 
-export const getClinic = cache(async (): Promise<Clinic | null> => {
+/**
+ * Uncached clinic lookup. Used by request handlers and background code that run
+ * outside a React render, where `cache()` has no request scope to hang off.
+ */
+export async function findClinic(): Promise<Clinic | null> {
   const db = getDb();
   const [clinic] = await db.select().from(clinics).orderBy(asc(clinics.createdAt)).limit(1);
   return clinic ?? null;
-});
+}
+
+export const getClinic = cache(findClinic);
 
 export type AgendaItem = {
   id: string;
@@ -448,6 +454,50 @@ export const getNextOpening = cache(
     return null;
   },
 );
+
+/**
+ * Open times on one day, for the conversational assistant.
+ *
+ * Uses the same slot grid (`OPENING_HOURS`) and 45-minute consult length as
+ * `getNextOpening`, and subtracts appointments already on the practice
+ * calendar, so the assistant can only offer times the front desk would.
+ */
+export async function listOpenSlots(
+  clinicId: string,
+  timeZone: string,
+  day: string,
+  now: Date = new Date(),
+): Promise<string[]> {
+  const times = OPENING_HOURS[weekdayIndex(day)] ?? [];
+  if (times.length === 0) return [];
+
+  const db = getDb();
+  const from = zonedDateTime(day, "00:00", timeZone);
+  const to = zonedDateTime(day, "23:59", timeZone);
+
+  const booked = await db
+    .select({ startsAt: appointments.startsAt, endsAt: appointments.endsAt })
+    .from(appointments)
+    .where(
+      and(
+        eq(appointments.clinicId, clinicId),
+        gte(appointments.startsAt, from),
+        lte(appointments.startsAt, to),
+      ),
+    );
+
+  const busy = booked.map((row) => ({
+    start: row.startsAt.getTime(),
+    end: row.endsAt.getTime(),
+  }));
+
+  return times.filter((time) => {
+    const startsAt = zonedDateTime(day, time, timeZone).getTime();
+    if (startsAt <= now.getTime()) return false;
+    const end = startsAt + DEFAULT_CONSULT_MINUTES * 60_000;
+    return !busy.some((slot) => startsAt < slot.end && end > slot.start);
+  });
+}
 
 export const listPractitioners = cache(async (clinicId: string) => {
   const db = getDb();
