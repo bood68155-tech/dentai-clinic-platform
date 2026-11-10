@@ -27,6 +27,44 @@ export function generateSessionToken(): string {
   return randomBytes(32).toString("base64url");
 }
 
+/**
+ * Developer-only sign-in used while no database is configured (see
+ * `isDevAdminFallbackEnabled`). The credentials are intentionally public and
+ * the resulting session is a sentinel that only `readCurrentUser` understands.
+ */
+export const DEV_ADMIN_EMAIL = "admin@dentai.com";
+export const DEV_ADMIN_PASSWORD = "admin123";
+const DEV_ADMIN_TOKEN = "dev-admin-fallback";
+const DEV_ADMIN_USER_ID = "00000000-0000-4000-8000-000000000000";
+const DEV_ADMIN_CLINIC_ID = "00000000-0000-4000-8000-000000000001";
+
+export function isDevAdminFallbackEnabled(): boolean {
+  // Never in a production build, and never once a real database exists: the
+  // fallback exists purely to browse the UI before `DATABASE_URL` is set.
+  return process.env.NODE_ENV !== "production" && !isDatabaseConfigured();
+}
+
+function devAdminUser(): SessionUser {
+  return {
+    id: DEV_ADMIN_USER_ID,
+    clinicId: DEV_ADMIN_CLINIC_ID,
+    fullName: "Dev Admin",
+    email: DEV_ADMIN_EMAIL,
+    role: "owner",
+    patientId: null,
+  };
+}
+
+/** Open the database-less developer session. Call from a server action only. */
+export async function createDevAdminSession(): Promise<void> {
+  const store = await cookies();
+  store.set(
+    SESSION_COOKIE_NAME,
+    DEV_ADMIN_TOKEN,
+    cookieOptions(SESSION_TTL_MS / 1000),
+  );
+}
+
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }
@@ -118,6 +156,10 @@ export async function readCurrentUser(): Promise<SessionUser | null> {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
+
+  if (token === DEV_ADMIN_TOKEN && isDevAdminFallbackEnabled()) {
+    return devAdminUser();
+  }
 
   // No database, no provable session: treat as signed out instead of throwing.
   if (!isDatabaseConfigured()) return null;

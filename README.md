@@ -164,6 +164,14 @@ Sign-in security details:
 ⚠️ Demo credentials only — change them and never seed demo data into a real
 deployment.
 
+### Developer sign-in without a database
+
+Until `DATABASE_URL` is set, `npm run dev` accepts `admin@dentai.com` /
+`admin123` and opens an owner session so the workspace UI can be reviewed. The
+fallback is compiled out of production builds and turns itself off as soon as a
+connection string is configured — it is not a substitute for a real staff
+account created by the seed script.
+
 ## Scripts
 
 | Script               | What it does                                         |

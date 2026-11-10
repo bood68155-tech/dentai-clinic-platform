@@ -9,7 +9,14 @@ import { findUserByEmail, getClinic } from "@/db/queries";
 import { roleHome } from "@/lib/auth";
 import type { AuthState } from "@/lib/form-state";
 import { dummyPasswordCheck, hashPassword, verifyPassword } from "@/lib/password";
-import { createSession, destroyCurrentSession } from "@/lib/session";
+import {
+  createDevAdminSession,
+  createSession,
+  destroyCurrentSession,
+  DEV_ADMIN_EMAIL,
+  DEV_ADMIN_PASSWORD,
+  isDevAdminFallbackEnabled,
+} from "@/lib/session";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -36,6 +43,26 @@ export async function signInAction(
 
   if (!email || !password) {
     return { status: "error", message: GENERIC_LOGIN_ERROR };
+  }
+
+  // Temporary developer sign-in so the workspace is reachable before a
+  // database is connected. Disabled in production and as soon as
+  // DATABASE_URL is set — real accounts then take over.
+  if (
+    isDevAdminFallbackEnabled() &&
+    email === DEV_ADMIN_EMAIL &&
+    password === DEV_ADMIN_PASSWORD
+  ) {
+    try {
+      await createDevAdminSession();
+    } catch (error) {
+      console.error("signInAction dev fallback failed", error);
+      return {
+        status: "error",
+        message: "Sign-in could not be completed right now. Please try again.",
+      };
+    }
+    redirect("/clinic");
   }
 
   let user;
