@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Sign in",
-  description: "Sign in to your Dentai account.",
+  description: "Sign in to your NUV account.",
 };
 
 /** The page reads the session cookie to skip sign-in for signed-in users, so

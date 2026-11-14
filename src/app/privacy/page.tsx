@@ -6,7 +6,7 @@ import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How Dentai handles the information you share with the practice.",
+  description: "How NUV handles the information you share with the practice.",
 };
 
 const SECTIONS = [
@@ -20,11 +20,11 @@ const SECTIONS = [
   },
   {
     title: "Who can see it",
-    body: "Only the Dentai team and the service providers who host our website and email. Where a specialist or laboratory is involved in your care, we share only what is clinically necessary and tell you first.",
+    body: "Only the NUV team and the service providers who host our website and email. Where a specialist or laboratory is involved in your care, we share only what is clinically necessary and tell you first.",
   },
   {
     title: "Keeping it",
-    body: "Enquiries that do not become appointments are deleted after twelve months. Clinical records are retained for the period required by New York State law and professional guidance.",
+    body: "Enquiries that do not become appointments are deleted after twelve months. Clinical records are retained for the period required by local law and professional guidance.",
   },
   {
     title: "Your choices",

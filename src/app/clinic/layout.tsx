@@ -5,7 +5,7 @@ import { requireStaffUser } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Clinic platform",
-  description: "Patients, appointments and dental charts for the Dentai practice.",
+  description: "Patients, appointments and dental charts for the NUV practice.",
 };
 
 /**

@@ -5,7 +5,7 @@
  *
  * Reads DATABASE_URL from `.env.local` first, then `.env`. Overridable:
  *
- *   ADMIN_EMAIL     default admin@dentai.com
+ *   ADMIN_EMAIL     default admin@nuv.com
  *   ADMIN_PASSWORD  default admin123
  *   ADMIN_NAME      default "Clinic Admin"
  *   ADMIN_CLINIC_SLUG  attach to this clinic instead of the oldest one
@@ -34,7 +34,7 @@ if (!url) {
   process.exit(1);
 }
 
-const EMAIL = (process.env.ADMIN_EMAIL ?? "admin@dentai.com").trim().toLowerCase();
+const EMAIL = (process.env.ADMIN_EMAIL ?? "admin@nuv.com").trim().toLowerCase();
 const PASSWORD = process.env.ADMIN_PASSWORD ?? "admin123";
 const FULL_NAME = process.env.ADMIN_NAME ?? "Clinic Admin";
 const CLINIC_SLUG = process.env.ADMIN_CLINIC_SLUG?.trim() || null;
@@ -60,10 +60,10 @@ async function main() {
     const [created] = await db
       .insert(schema.clinics)
       .values({
-        name: "Dentai Clinic",
-        slug: "dentai",
-        timezone: "America/New_York",
-        currency: "USD",
+        name: "NUV Clinic",
+        slug: "nuv",
+        timezone: "Asia/Gaza",
+        currency: "ILS",
       })
       .returning();
     clinic = created;

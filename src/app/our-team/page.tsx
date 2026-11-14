@@ -9,12 +9,12 @@ import { SiteHeader } from "@/components/site-header";
 export const metadata: Metadata = {
   title: "Our Team",
   description:
-    "Meet the dentists, hygienists and front-desk team at Dentai in SoHo, New York.",
+    "Meet the dentists, hygienists and front-desk team at NUV in Khan Yunis, Gaza.",
 };
 
 const TEAM = [
   {
-    name: "Dr. Maya Ellison",
+    name: "Dr. Ayman Saleh (أيمن صالح)",
     role: "Founder & General Dentist",
     src: "/images/team-maya.webp",
     bio: "Twenty years of family practice, with a soft spot for nervous first visits and a firmly unhurried chair. Trained at NYU, and still takes the emergency calls herself.",

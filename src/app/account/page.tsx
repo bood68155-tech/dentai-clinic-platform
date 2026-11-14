@@ -197,7 +197,7 @@ async function Dashboard({ patientId }: { patientId: string | null }) {
                 {patient.firstName} {patient.lastName}
               </h2>
               <p className="text-[11px] text-muted">
-                Patient record · {clinic?.name ?? "Dentai"}
+                Patient record · {clinic?.name ?? "NUV"}
               </p>
             </div>
           </div>

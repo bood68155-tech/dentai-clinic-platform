@@ -8,16 +8,17 @@ import { HeroSplit } from "@/components/marketing/hero-split";
 import { ArrowIcon, Roll } from "@/components/marketing/roll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Dentai is a SoHo dental practice built around unhurried, considered care. Meet the team and the thinking behind the room.",
+    "NUV is a Khan Yunis dental practice built around unhurried, considered care. Meet the team and the thinking behind the room.",
 };
 
 const PEOPLE = [
   {
-    name: "Dr. Maya Ellison",
+    name: "Dr. Ayman Saleh (أيمن صالح)",
     role: "Founder & General Dentist",
     src: "/images/team-maya.webp",
     bio: "Twenty years of family practice, with a soft spot for nervous first visits and a firmly unhurried chair.",
@@ -64,9 +65,9 @@ export default function AboutPage() {
           tone="green"
           priority
           src="/images/reception-close.webp"
-          alt="The Dentai reception, with oak shelving and soft daylight"
+          alt="The NUV reception, with oak shelving and soft daylight"
           title={<>Dentistry that feels unhurried.</>}
-          intro={<>A small SoHo practice built around one idea: good dentistry should never feel like a production line.</>}
+          intro={<>A small Khan Yunis practice built around one idea: good dentistry should never feel like a production line.</>}
         />
 
         <section className="section">
@@ -78,7 +79,7 @@ export default function AboutPage() {
               <div className="col col-8">
                 <div className="two-up">
                   <p className="paragraph-lg">
-                    We opened on Greene Street because we wanted a room that could be
+                    We opened in Khan Yunis because we wanted a room that could be
                     quiet. No television on the ceiling, no script at the front desk —
                     just a calm space, good light and enough time to do the work properly.
                   </p>
@@ -96,7 +97,7 @@ export default function AboutPage() {
         <section className="media anamorphic zoom-media">
           <Image
             src="/images/lounge.webp"
-            alt="The Dentai lounge, with a leather bench and warm daylight"
+            alt="The NUV lounge, with a leather bench and warm daylight"
             fill
             sizes="100vw"
             className="object-cover"
@@ -209,7 +210,7 @@ export default function AboutPage() {
                   slower version of this work. Send a note and tell us what you would
                   like your days to look like.
                 </p>
-                <a href="mailto:hello@dentaiclinic.com?subject=Joining%20the%20Dentai%20team" className="button mt-8">
+                <a href={`mailto:${CLINIC_PROFILE.email}?subject=Joining%20the%20NUV%20team`} className="button mt-8">
                   <Roll>Get in touch</Roll>
                 </a>
               </div>

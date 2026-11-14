@@ -12,11 +12,11 @@ import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Dentai in SoHo, New York. Find the clinic, check hours, or send the front desk a message.",
+    "Contact NUV in Khan Yunis, Gaza. Find the clinic, check hours, or send the front desk a message.",
 };
 
 const MAP_SRC =
-  "https://www.google.com/maps?q=118+Greene+Street+New+York+NY+10012&z=16&output=embed";
+  "https://www.google.com/maps?q=Khan+Yunis+Gaza+Palestine&z=14&output=embed";
 
 export default function ContactPage() {
   return (
@@ -92,38 +92,27 @@ export default function ContactPage() {
                     </li>
                     <li>
                       <a
-                        href="https://www.instagram.com/"
+                        href={CLINIC_PROFILE.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="link-underline"
                       >
-                        @dentaiclinic
+                        {CLINIC_PROFILE.instagramHandle}
                       </a>
                     </li>
                   </ul>
                   <div className="mt-3 flex items-center gap-3">
                     <a
-                      href="https://www.instagram.com/"
+                      href={CLINIC_PROFILE.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label="Dentai on Instagram"
+                      aria-label="NUV on Instagram"
                       className="link-arrow"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                         <rect x="3" y="3" width="18" height="18" rx="5" />
                         <circle cx="12" cy="12" r="4" />
                         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                      </svg>
-                    </a>
-                    <a
-                      href="https://www.facebook.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Dentai on Facebook"
-                      className="link-arrow"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                        <path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v5h4v-5h3l1-4h-4V8Z" />
                       </svg>
                     </a>
                   </div>
@@ -146,7 +135,7 @@ export default function ContactPage() {
                 <div className="media ratio-4x3">
                   <iframe
                     src={MAP_SRC}
-                    title="Map showing Dentai at 118 Greene Street, New York"
+                    title="Map showing NUV in Khan Yunis, Gaza"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     className="absolute inset-0 h-full w-full border-0"
@@ -169,8 +158,8 @@ export default function ContactPage() {
                     <h3 className="h3">Parking</h3>
                     <div className="rule" />
                     <p className="paragraph-md mb-0">
-                      On-site parking available. Metered street parking on Greene
-                      Street too, and a garage on Broome. The entrance is step-free.
+                      On-site parking available, with street parking nearby. The
+                      entrance is step-free.
                     </p>
                   </div>
                 </div>
@@ -182,7 +171,7 @@ export default function ContactPage() {
         <section className="media anamorphic zoom-media">
           <Image
             src="/images/shelf-detail.webp"
-            alt="A detail of the shelving at the Dentai practice"
+            alt="A detail of the shelving at the NUV practice"
             fill
             sizes="100vw"
             className="object-cover"
@@ -198,7 +187,7 @@ export default function ContactPage() {
               <div className="col col-8">
                 <p className="paragraph-lg max-w-[42ch]">
                   From preventive and restorative care to cosmetic and endodontic
-                  treatment, Dentai does it all with the same unhurried, plain-spoken
+                  treatment, NUV does it all with the same unhurried, plain-spoken
                   approach.
                 </p>
                 <button type="button" data-book-online className="button mt-8">

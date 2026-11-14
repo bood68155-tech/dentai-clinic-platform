@@ -21,7 +21,7 @@ const WHY = [
   },
   {
     title: "We know our craft, and consider care part of it.",
-    body: "At Dentai, a good chair-side manner isn't a nice-to-have. We build relationships with our patients that make them feel safe, and that stand the test of time.",
+    body: "At NUV, a good chair-side manner isn't a nice-to-have. We build relationships with our patients that make them feel safe, and that stand the test of time.",
   },
 ];
 
@@ -41,7 +41,7 @@ export default function HomePage() {
     <div className="flex flex-1 flex-col">
       <section className="section">
         <div className="container brand-hero">
-          <Link href="/" aria-label="Dentai home" className="brand-wordmark">
+          <Link href="/" aria-label="NUV home" className="brand-wordmark">
             <Wordmark />
           </Link>
           <p className="brand-tagline">
@@ -58,7 +58,7 @@ export default function HomePage() {
           <div className="media anamorphic zoom-media">
             <Image
               src="/images/reception.webp"
-              alt="Warm oak, soft light and a quiet reception at the Dentai clinic"
+              alt="Warm oak, soft light and a quiet reception at the NUV clinic"
               fill
               priority
               sizes="100vw"
@@ -82,7 +82,7 @@ export default function HomePage() {
                 <div className="media ratio-16x9 mb-6 zoom-media">
                   <Image
                     src="/images/portrait-smile.webp"
-                    alt="A patient laughing in the Dentai chair"
+                    alt="A patient laughing in the NUV chair"
                     fill
                     sizes="(min-width: 992px) 66vw, 100vw"
                     className="object-cover"
@@ -117,7 +117,7 @@ export default function HomePage() {
             <div className="split__media">
               <Image
                 src="/images/lounge.webp"
-                alt="The Dentai lounge, with a leather bench and shelves of books"
+                alt="The NUV lounge, with a leather bench and shelves of books"
                 fill
                 sizes="(min-width: 992px) 50vw, 100vw"
                 className="object-cover"
@@ -175,7 +175,7 @@ export default function HomePage() {
               <div className="col col-4 flex flex-col items-start gap-6">
                 <p className="paragraph-md">
                   From preventive and restorative care to cosmetic and endodontic
-                  treatment, Dentai does it all to the same dialled-up degree of comfort
+                  treatment, NUV does it all to the same dialled-up degree of comfort
                   and professionalism.
                 </p>
                 <button type="button" data-book-online className="button">

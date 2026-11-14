@@ -222,7 +222,7 @@ export function BookOnline() {
                 Visit <b className="text-[11.5px] font-medium normal-case tracking-normal text-paper">{SLOT_MINUTES} min · In clinic</b>
               </li>
               <li className="flex items-baseline justify-between gap-4 border-b border-paper/20 py-2.5 text-[9px] uppercase tracking-[0.08em] text-paper/60">
-                Where <b className="text-[11.5px] font-medium normal-case tracking-normal text-paper">SoHo, New York</b>
+                Where <b className="text-[11.5px] font-medium normal-case tracking-normal text-paper">Khan Yunis, Gaza</b>
               </li>
               <li className="flex items-baseline justify-between gap-4 border-b border-paper/20 py-2.5 text-[9px] uppercase tracking-[0.08em] text-paper/60">
                 Right now <b className="text-[11.5px] font-medium tabular-nums text-paper">{clock || "--:--"} NY</b>

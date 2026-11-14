@@ -1,4 +1,4 @@
-# Dentai — smart dental clinic platform
+# NUV — smart dental clinic platform
 
 A dental practice platform with two faces: a calm, editorial **public site** for the
 clinic, and a **clinical workspace** for patients, appointments and dental charts.
@@ -157,16 +157,16 @@ Sign-in security details:
 
 | Email                                | Password       | Role     | Lands on  |
 | ------------------------------------ | -------------- | -------- | --------- |
-| `maya.haddad@dentaiclinic.com`       | `DentaiDemo-2026` | owner | `/clinic` |
-| `elias.rahal@dentaiclinic.com`       | `DentaiDemo-2026` | dentist | `/clinic` |
-| `amelia.fontaine@example.com`        | `DentaiDemo-2026` | patient | `/account` |
+| `bood68155@gmail.com`                | `NUVDemo-2026`    | owner | `/clinic` |
+| `elias.rahal@nuvclinic.com`          | `NUVDemo-2026`    | dentist | `/clinic` |
+| `amelia.fontaine@example.com`        | `NUVDemo-2026`    | patient | `/account` |
 
 ⚠️ Demo credentials only — change them and never seed demo data into a real
 deployment.
 
 ### A real admin account on a connected database
 
-`npm run db:create-admin` inserts `admin@dentai.com` as a clinic owner (default
+`npm run db:create-admin` inserts `admin@nuv.com` as a clinic owner (default
 password `admin123`, overridable with `ADMIN_PASSWORD`) and resets the password
 if the account already exists. It attaches to the oldest clinic, or to
 `ADMIN_CLINIC_SLUG` if set, and creates a minimal practice row when the database
@@ -174,7 +174,7 @@ has never been seeded.
 
 ### Developer sign-in without a database
 
-Until `DATABASE_URL` is set, `npm run dev` accepts `admin@dentai.com` /
+Until `DATABASE_URL` is set, `npm run dev` accepts `admin@nuv.com` /
 `admin123` and opens an owner session so the workspace UI can be reviewed. The
 fallback is compiled out of production builds and turns itself off as soon as a
 connection string is configured — it is not a substitute for a real staff
@@ -193,7 +193,7 @@ account created by the seed script.
 | `npm run db:push`    | Push the schema straight to the database             |
 | `npm run db:migrate` | Apply the committed migrations in `drizzle/`         |
 | `npm run db:seed`    | (Re)create the demo clinic — idempotent, demo only   |
-| `npm run db:create-admin` | Create/reset `admin@dentai.com` as clinic owner  |
+| `npm run db:create-admin` | Create/reset `admin@nuv.com` as clinic owner  |
 | `npm run db:studio`  | Drizzle Studio                                       |
 
 ## Deploying to Vercel
@@ -217,7 +217,7 @@ behind transaction-mode poolers.
 
 ## Conversational booking assistant
 
-The floating "Ask Dentai" widget on the marketing pages posts to
+The floating "Ask NUV" widget on the marketing pages posts to
 `POST /api/assistant`. It answers clinic questions from `src/lib/clinic-profile.ts`
 and books appointments through the same `requestAppointment` mutation as the public
 form, checking open slots first. The model runs server-side only; no key reaches the

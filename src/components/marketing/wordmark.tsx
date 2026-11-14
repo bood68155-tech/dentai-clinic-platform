@@ -1,11 +1,11 @@
 /**
- * The oversized Dentai wordmark. The reference sets its logo as an SVG path
+ * The oversized NUV wordmark. The reference sets its logo as an SVG path
  * that always spans the container, so the site name is drawn as SVG text with
  * `textLength` doing the same job at any viewport.
  */
 export function Wordmark({
   className,
-  title = "Dentai",
+  title = "NUV",
 }: {
   className?: string;
   title?: string;
@@ -29,7 +29,7 @@ export function Wordmark({
         fontSize="236"
         letterSpacing="-10"
       >
-        Dentai
+        NUV
       </text>
     </svg>
   );

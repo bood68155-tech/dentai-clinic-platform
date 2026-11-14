@@ -5,7 +5,7 @@
  *   npm run db:seed   # load demo data
  *
  * The script is idempotent: it removes only the demo clinic (`slug =
- * 'dentai-demo'`) and recreates it, leaving any real clinic data untouched.
+ * 'nuv-demo'`) and recreates it, leaving any real clinic data untouched.
  */
 import { config } from "dotenv";
 import { eq } from "drizzle-orm";
@@ -26,15 +26,15 @@ if (!url) {
 
 const client = postgres(url, { max: 1, prepare: false, onnotice: () => {} });
 const db = drizzle(client, { schema });
-const CLINIC_SLUG = "dentai-demo";
-const TIMEZONE = "America/New_York";
+const CLINIC_SLUG = "nuv-demo";
+const TIMEZONE = "Asia/Gaza";
 
 /**
  * Demo sign-in password for every seeded account. Documented in the README,
  * and MUST be changed as soon as real accounts exist — the seed only creates
- * the fake `dentai-demo` clinic.
+ * the fake `nuv-demo` clinic.
  */
-const DEMO_PASSWORD = "DentaiDemo-2026";
+const DEMO_PASSWORD = "NUVDemo-2026";
 
 /** Wall-clock time in the clinic's timezone → the matching UTC instant. */
 function zonedDate(day: string, hour: number, minute = 0): Date {
@@ -78,13 +78,13 @@ async function main() {
   const [clinic] = await db
     .insert(schema.clinics)
     .values({
-      name: "Dentai Clinic",
+      name: "NUV Clinic",
       slug: CLINIC_SLUG,
-      phone: "+1 (212) 555-0184",
-      email: "hello@dentaiclinic.com",
-      address: "118 Greene Street, Suite 4, New York, NY",
+      phone: "+970 599 608 181",
+      email: "bood68155@gmail.com",
+      address: "Khan Yunis, Gaza, Palestine",
       timezone: TIMEZONE,
-      currency: "USD",
+      currency: "ILS",
       workingHours: {
         mon: ["09:00", "18:00"],
         tue: ["09:00", "18:00"],
@@ -106,11 +106,11 @@ async function main() {
     .values([
       {
         clinicId: clinic.id,
-        fullName: "Dr. Maya Haddad",
-        email: "maya.haddad@dentaiclinic.com",
+        fullName: "Dr. Ayman Saleh",
+        email: "bood68155@gmail.com",
         role: "owner",
         specialty: "Restorative dentistry",
-        licenseNumber: "NY-448210",
+        licenseNumber: "PS-448210",
         color: "#2F6F5E",
         passwordHash: demoHash,
         emailVerifiedAt: now,
@@ -118,10 +118,10 @@ async function main() {
       {
         clinicId: clinic.id,
         fullName: "Dr. Elias Rahal",
-        email: "elias.rahal@dentaiclinic.com",
+        email: "elias.rahal@nuvclinic.com",
         role: "dentist",
         specialty: "Endodontics",
-        licenseNumber: "NY-512907",
+        licenseNumber: "PS-512907",
         color: "#3E6B8A",
         passwordHash: demoHash,
         emailVerifiedAt: now,
@@ -129,7 +129,7 @@ async function main() {
       {
         clinicId: clinic.id,
         fullName: "Noor Salem",
-        email: "noor.salem@dentaiclinic.com",
+        email: "noor.salem@nuvclinic.com",
         role: "hygienist",
         specialty: "Preventive care",
         color: "#B08A4F",
@@ -139,7 +139,7 @@ async function main() {
       {
         clinicId: clinic.id,
         fullName: "Lena Ortiz",
-        email: "lena.ortiz@dentaiclinic.com",
+        email: "lena.ortiz@nuvclinic.com",
         role: "receptionist",
         color: "#7B6A9B",
         passwordHash: demoHash,
@@ -186,7 +186,7 @@ async function main() {
         gender: "female",
         email: "amelia.fontaine@example.com",
         phone: "+1 (212) 555-0117",
-        address: "42 Bleecker Street, New York, NY",
+        address: "Al-Bahr Street, Khan Yunis, Gaza",
         occupation: "Architect",
         medicalAlerts: ["allergy: penicillin", "pregnancy"],
         allergies: "Penicillin — rash",
@@ -204,7 +204,7 @@ async function main() {
         gender: "male",
         email: "marcus.oyelaran@example.com",
         phone: "+1 (212) 555-0192",
-        address: "9 Cornelia Street, New York, NY",
+        address: "Jamal Abdel Nasser Street, Khan Yunis, Gaza",
         occupation: "Chef",
         medicalAlerts: ["hypertension", "anticoagulants"],
         medicalNotes: "On apixaban. Coordinate with GP before surgical treatment.",
@@ -220,7 +220,7 @@ async function main() {
         gender: "female",
         email: "sofia.lindqvist@example.com",
         phone: "+1 (212) 555-0164",
-        address: "77 Greenwich Avenue, New York, NY",
+        address: "Al-Amal Street, Khan Yunis, Gaza",
         occupation: "Student",
         medicalAlerts: [],
         referralSource: "Instagram",
@@ -233,7 +233,7 @@ async function main() {
         gender: "male",
         email: "tobias.meyer@example.com",
         phone: "+1 (212) 555-0128",
-        address: "210 West 4th Street, New York, NY",
+        address: "Al-Quds Street, Khan Yunis, Gaza",
         occupation: "Publisher",
         medicalAlerts: ["type-2 diabetes"],
         medicalNotes: "HbA1c 7.4 — monitor healing after extractions.",
@@ -249,7 +249,7 @@ async function main() {
         gender: "female",
         email: "priya.raman@example.com",
         phone: "+1 (212) 555-0143",
-        address: "5 Jane Street, New York, NY",
+        address: "Al-Rashid Street, Khan Yunis, Gaza",
         occupation: "Product designer",
         medicalAlerts: ["allergy: latex"],
         allergies: "Latex — contact dermatitis",
@@ -263,7 +263,7 @@ async function main() {
         gender: "male",
         email: "daniel.okafor@example.com",
         phone: "+1 (212) 555-0175",
-        address: "301 West 12th Street, New York, NY",
+        address: "Al-Wehda Street, Khan Yunis, Gaza",
         occupation: "Cyclist",
         medicalAlerts: [],
         referralSource: "Friend",
@@ -536,8 +536,8 @@ async function main() {
   });
 
   console.log("\n  Demo sign-in (password for all accounts):", DEMO_PASSWORD);
-  console.log("    owner    maya.haddad@dentaiclinic.com → /clinic");
-  console.log("    dentist  elias.rahal@dentaiclinic.com → /clinic");
+  console.log("    owner    bood68155@gmail.com → /clinic");
+  console.log("    dentist  elias.rahal@nuvclinic.com → /clinic");
   console.log("    patient  amelia.fontaine@example.com → /account");
 
   await client.end();

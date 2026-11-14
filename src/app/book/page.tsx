@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/utils";
 export const metadata = {
   title: "Book a visit",
   description:
-    "Request an appointment at Dentai in SoHo, New York. We confirm every request by phone or email.",
+    "Request an appointment at NUV in Khan Yunis, Gaza. We confirm every request by phone or email.",
 };
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;

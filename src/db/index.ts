@@ -19,8 +19,8 @@ type Client = ReturnType<typeof postgres>;
 export type DatabaseStatus = "configured" | "missing" | "invalid";
 
 const globalForDb = globalThis as unknown as {
-  dentaiDb?: Db;
-  dentaiClient?: Client;
+  nuvDb?: Db;
+  nuvClient?: Client;
 };
 
 /**
@@ -153,7 +153,7 @@ export class DatabaseUnavailableError extends Error {
  * missing, malformed or unbuildable configuration, so callers can degrade.
  */
 export function tryGetDb(): Db | null {
-  if (globalForDb.dentaiDb) return globalForDb.dentaiDb;
+  if (globalForDb.nuvDb) return globalForDb.nuvDb;
 
   const resolved = resolveDatabaseUrl();
   if (resolved.status !== "configured") return null;
@@ -173,8 +173,8 @@ export function tryGetDb(): Db | null {
     // query exhausts Neon's pooler on a busy page and surfaces as intermittent
     // CONNECT_TIMEOUT / "Connection closed" errors during requests such as
     // sign-in. The global also survives development hot reloads.
-    globalForDb.dentaiClient = client;
-    globalForDb.dentaiDb = db;
+    globalForDb.nuvClient = client;
+    globalForDb.nuvDb = db;
 
     return db;
   } catch (error) {

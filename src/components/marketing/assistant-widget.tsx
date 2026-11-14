@@ -14,7 +14,7 @@ type Entry = {
 };
 
 const GREETING =
-  "Hi — I'm the Dentai assistant. I can answer questions about the practice and book you in. What brings you in?";
+  "Hi — I'm the NUV assistant. I can answer questions about the practice and book you in. What brings you in?";
 
 const QUICK_PROMPTS = [
   "What are your opening hours?",
@@ -130,9 +130,9 @@ export function AssistantWidget() {
     <>
       {open ? (
         <section
-          id="dentai-assistant"
+          id="nuv-assistant"
           role="dialog"
-          aria-label="Dentai virtual assistant"
+          aria-label="NUV virtual assistant"
           className="fixed bottom-20 right-4 z-[85] flex h-[min(33rem,calc(100svh-7.5rem))] w-[min(23rem,calc(100vw-2rem))] flex-col border border-ink bg-paper sm:right-5"
         >
           <header className="flex items-start justify-between gap-3 bg-forest px-4 py-3 text-paper">
@@ -141,7 +141,7 @@ export function AssistantWidget() {
                 {CLINIC_PROFILE.name} reception
               </p>
               <p className="mt-1.5 font-sans text-[8.5px] font-bold uppercase leading-none tracking-[0.1em] text-paper/65">
-                Assistant · SoHo, New York
+                Assistant · Khan Yunis, Gaza
               </p>
             </div>
             <button
@@ -279,7 +279,7 @@ export function AssistantWidget() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-controls="dentai-assistant"
+        aria-controls="nuv-assistant"
         className="fixed bottom-4 right-4 z-[80] flex items-center gap-2 border border-ink bg-forest px-3.5 py-2.5 font-sans text-[10px] font-extrabold uppercase leading-none tracking-[0.08em] text-paper transition-colors hover:bg-ink sm:bottom-5 sm:right-5"
       >
         <span aria-hidden="true" className="size-1.5 bg-clay" />

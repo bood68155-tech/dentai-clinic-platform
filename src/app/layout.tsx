@@ -18,16 +18,16 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: {
-    default: "Dentai — Dentistry that feels unhurried",
-    template: "%s · Dentai",
+    default: "NUV — Dentistry that feels unhurried",
+    template: "%s · NUV",
   },
   description:
-    "Dentai is a modern dental clinic in SoHo, New York, pairing calm, considered care with a clinical platform built for the whole practice.",
-  metadataBase: new URL("https://dentai-clinic-platform.vercel.app"),
+    "NUV is a modern dental clinic in Khan Yunis, Gaza, pairing calm, considered care with a clinical platform built for the whole practice.",
+  metadataBase: new URL("https://nuv-clinic-platform.vercel.app"),
   openGraph: {
-    title: "Dentai — Dentistry that feels unhurried",
+    title: "NUV — Dentistry that feels unhurried",
     description:
-      "General, cosmetic and restorative dentistry in SoHo, New York. Calm rooms, clear plans, no waiting-room rush.",
+      "General, cosmetic and restorative dentistry in Khan Yunis, Gaza. Calm rooms, clear plans, no waiting-room rush.",
     type: "website",
   },
 };

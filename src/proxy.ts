@@ -12,7 +12,7 @@ import { NextResponse, type NextRequest } from "next/server";
  * authorisation boundary. Roles are verified in the server layouts, pages and
  * actions against the database (`src/lib/auth.ts`).
  */
-const SESSION_COOKIE = "dentai.session";
+const SESSION_COOKIE = "nuv.session";
 
 const PRIVATE_PREFIXES = ["/clinic", "/account"];
 

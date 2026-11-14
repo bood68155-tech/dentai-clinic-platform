@@ -1,11 +1,14 @@
 /** Public-facing practice details used by the marketing site. */
 export const CLINIC_PROFILE = {
-  name: "Dentai",
+  name: "NUV",
+  owner: "أيمن صالح (Ayman Saleh)",
   tagline: "Dentistry that feels unhurried.",
-  phone: "+1 (212) 555-0184",
-  phoneHref: "tel:+12125550184",
-  email: "hello@dentaiclinic.com",
-  address: ["118 Greene Street, Suite 4", "New York, NY 10012"],
+  phone: "+970 599 608 181",
+  phoneHref: "tel:+970599608181",
+  email: "bood68155@gmail.com",
+  instagram: "https://www.instagram.com/nuv.562?rpxt=bGs3Yzl1NDFkYWFw",
+  instagramHandle: "@nuv.562",
+  address: ["Khan Yunis", "Gaza, Palestine"],
   hours: [
     { days: "Monday – Wednesday", time: "09:00 – 18:00" },
     { days: "Thursday", time: "09:00 – 19:00" },

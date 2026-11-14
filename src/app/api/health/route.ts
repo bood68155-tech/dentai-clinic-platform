@@ -9,7 +9,7 @@ export async function GET() {
 
   return NextResponse.json({
     status: "ok",
-    service: "dentai-clinic-platform",
+    service: "nuv-clinic-platform",
     database: getDatabaseStatus(),
     timestamp: new Date().toISOString(),
   });

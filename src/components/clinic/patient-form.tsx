@@ -130,7 +130,7 @@ export function PatientForm() {
               name="address"
               autoComplete="street-address"
               className={inputClass}
-              placeholder="42 Bleecker Street, New York, NY"
+              placeholder="Al-Bahr Street, Khan Yunis, Gaza"
             />
           </Field>
           <Field label="Occupation" name="occupation">

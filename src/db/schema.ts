@@ -1,5 +1,5 @@
 /**
- * Dentai clinic schema.
+ * NUV clinic schema.
  *
  * Modelling notes
  * ---------------

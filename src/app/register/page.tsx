@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 export const metadata = {
   title: "Create an account",
   description:
-    "Create a Dentai patient account to see your visits and treatment plan.",
+    "Create a NUV patient account to see your visits and treatment plan.",
 };
 
 /** Reads the session cookie to redirect signed-in users, so it is a blocking

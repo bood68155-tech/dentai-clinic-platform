@@ -22,7 +22,7 @@ export function SiteFooter() {
     <footer className="section footer">
       <div className="container">
         <div className="footer-head">
-          <Link href="/" className="footer-wordmark" aria-label="Dentai home">
+          <Link href="/" className="footer-wordmark" aria-label="NUV home">
             <span className="footer-script">Dentistry — Not Routine</span>
             <Wordmark />
           </Link>
@@ -55,37 +55,24 @@ export function SiteFooter() {
                 <a href={`mailto:${CLINIC_PROFILE.email}`}>{CLINIC_PROFILE.email}</a>
               </li>
               <li>
-                <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">
-                  @dentai.clinic
+                <a href={CLINIC_PROFILE.instagram} target="_blank" rel="noreferrer">
+                  {CLINIC_PROFILE.instagramHandle}
                 </a>
               </li>
             </ul>
             <ul className="mt-4 flex gap-1">
               <li>
                 <a
-                  href="https://www.instagram.com/"
+                  href={CLINIC_PROFILE.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="Instagram"
+                  aria-label="NUV on Instagram"
                   className="block w-6"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
                     <rect x="3" y="3" width="18" height="18" rx="5" />
                     <circle cx="12" cy="12" r="4" />
                     <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.facebook.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Facebook"
-                  className="block w-6"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
-                    <path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l.6-3.5h-3.1V7.8c0-.8.3-1.3 1.3-1.3H15Z" />
                   </svg>
                 </a>
               </li>
@@ -99,6 +86,9 @@ export function SiteFooter() {
               {CLINIC_PROFILE.address[0]}
               <br />
               {CLINIC_PROFILE.address[1]}
+            </p>
+            <p className="paragraph-sm paragraph-short mt-3">
+              Led by {CLINIC_PROFILE.owner}
             </p>
           </div>
 
@@ -118,7 +108,7 @@ export function SiteFooter() {
             <h3 className="h3">Newsletter</h3>
             <div className="rule" />
             <p className="paragraph-sm paragraph-short mb-3">
-              Want to know about the goings on around the clinic? Get the Dentai news.
+              Want to know about the goings on around the clinic? Get the NUV news.
             </p>
             {subscribed ? (
               <p className="paragraph-md form-success">Thank you! Your submission has been received!</p>
@@ -156,7 +146,7 @@ export function SiteFooter() {
         <div className="container">
           <div className="row flush">
             <div className="col col-2">
-              <p className="paragraph-sm paragraph-short mb-0">© Dentai {COPYRIGHT_YEAR}</p>
+              <p className="paragraph-sm paragraph-short mb-0">© NUV {COPYRIGHT_YEAR}</p>
             </div>
             <div className="col col-6">
               <Link href="/privacy" className="paragraph-sm paragraph-short mb-0 no-underline">
@@ -165,7 +155,7 @@ export function SiteFooter() {
             </div>
             <div className="col col-4 text-right">
               <span className="paragraph-sm paragraph-short mb-0">
-                Designed with care in SoHo, New York
+                Designed with care in Khan Yunis, Gaza
               </span>
             </div>
           </div>

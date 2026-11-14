@@ -12,7 +12,7 @@ import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Preventive, restorative, cosmetic, endodontic and implant dentistry at Dentai in SoHo, New York.",
+    "Preventive, restorative, cosmetic, endodontic and implant dentistry at NUV in Khan Yunis, Gaza.",
 };
 
 const MAIN = CLINIC_PROFILE.services.slice(0, 3);
@@ -46,7 +46,7 @@ export default function ServicesPage() {
           tone="gold"
           priority
           src="/images/portrait-smile.webp"
-          alt="A patient smiling at the Dentai practice"
+          alt="A patient smiling at the NUV practice"
           title={<>Everything your mouth needs, under one calm roof.</>}
           intro={<>General, cosmetic and specialist dentistry delivered by one team, on one plan, without the hand-offs.</>}
         />
@@ -128,7 +128,7 @@ export default function ServicesPage() {
         <section className="media ratio-16x9 zoom-media">
           <Image
             src="/images/blanket.webp"
-            alt="A folded blanket on a chair in the Dentai lounge"
+            alt="A folded blanket on a chair in the NUV lounge"
             fill
             sizes="100vw"
             className="object-cover"

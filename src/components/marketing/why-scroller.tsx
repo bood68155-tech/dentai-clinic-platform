@@ -44,7 +44,7 @@ export function WhyScroller({ items }: { items: WhyItem[] }) {
   }, []);
 
   return (
-    <section className="section why" ref={section} aria-label="Why choose Dentai">
+    <section className="section why" ref={section} aria-label="Why choose NUV">
       <div className="why-sticky">
         <div className="container why-head">
           <div className="row flush">

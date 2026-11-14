@@ -8,7 +8,7 @@ import { requirePatientUser } from "@/lib/auth";
 
 export const metadata = {
   title: "Your account",
-  description: "Your visits and treatment plan at Dentai.",
+  description: "Your visits and treatment plan at NUV.",
 };
 
 /**
@@ -37,7 +37,7 @@ export default async function AccountLayout({
           <Link href="/" className="flex items-center gap-2.5 text-forest">
             <ToothMark className="size-5" />
             <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.055em]">
-              Dentai
+              NUV
             </span>
           </Link>
 

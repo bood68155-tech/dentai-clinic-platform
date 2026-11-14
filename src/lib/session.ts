@@ -14,7 +14,7 @@ import { sessions, users, type User } from "@/db/schema";
  * SameSite=Lax, and Secure in production, and live for 30 days with sliding
  * renewal (the expiry moves forward when the session is used after a day).
  */
-export const SESSION_COOKIE_NAME = "dentai.session";
+export const SESSION_COOKIE_NAME = "nuv.session";
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const RENEW_AFTER_MS = 24 * 60 * 60 * 1000;
 
@@ -32,7 +32,7 @@ export function generateSessionToken(): string {
  * `isDevAdminFallbackEnabled`). The credentials are intentionally public and
  * the resulting session is a sentinel that only `readCurrentUser` understands.
  */
-export const DEV_ADMIN_EMAIL = "admin@dentai.com";
+export const DEV_ADMIN_EMAIL = "admin@nuv.com";
 export const DEV_ADMIN_PASSWORD = "admin123";
 const DEV_ADMIN_TOKEN = "dev-admin-fallback";
 const DEV_ADMIN_USER_ID = "00000000-0000-4000-8000-000000000000";

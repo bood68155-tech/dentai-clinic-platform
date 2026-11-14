@@ -11,7 +11,7 @@ import { CLINIC_PROFILE } from "@/lib/clinic-profile";
 export const metadata: Metadata = {
   title: "New Patients",
   description:
-    "What to expect at your first visit to Dentai in SoHo — paperwork, assessment, and a plan you can read at home.",
+    "What to expect at your first visit to NUV in Khan Yunis — paperwork, assessment, and a plan you can read at home.",
 };
 
 const STEPS = [

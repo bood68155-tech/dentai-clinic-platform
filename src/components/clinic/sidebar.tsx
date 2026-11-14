@@ -53,7 +53,7 @@ export function Sidebar({ user }: { user: SessionUser }) {
         <Link href="/" className="flex items-center gap-2.5 text-forest">
           <ToothMark className="size-5" />
           <span className="font-display text-[1.2rem] font-extrabold tracking-[-0.055em]">
-            Dentai
+            NUV
           </span>
         </Link>
         <span className="ml-auto rounded-full border border-forest/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em] text-muted">
@@ -141,7 +141,7 @@ export function Sidebar({ user }: { user: SessionUser }) {
             </div>
           </div>
           <div className="mt-3 flex items-center justify-between border-t border-line/80 pt-3">
-            <p className="text-[10.5px] text-muted">Dentai Clinic · SoHo</p>
+            <p className="text-[10.5px] text-muted">NUV Clinic · Khan Yunis</p>
             <SignOutButton />
           </div>
         </div>
@@ -161,7 +161,7 @@ export function MobileNav() {
     >
       <Link href="/" className="mr-2 flex items-center gap-1.5 px-1 text-forest">
         <ToothMark className="size-4" />
-        <span className="font-display text-base">Dentai</span>
+        <span className="font-display text-base">NUV</span>
       </Link>
       {NAV.map((item) => {
         const active =
