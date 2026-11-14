@@ -1,7 +1,7 @@
 /** Public-facing practice details used by the marketing site. */
 export const CLINIC_PROFILE = {
   name: "NUV",
-  owner: "أيمن صالح (Ayman Saleh)",
+  owner: "Ayman Saleh",
   tagline: "Dentistry that feels unhurried.",
   phone: "+970 599 608 181",
   phoneHref: "tel:+970599608181",
