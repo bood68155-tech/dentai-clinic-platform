@@ -9,33 +9,23 @@ import { SiteHeader } from "@/components/site-header";
 export const metadata: Metadata = {
   title: "Our Team",
   description:
-    "Meet the dentists, hygienists and front-desk team at NUV in Khan Yunis, Gaza.",
+    "Meet Dr. Ayman Saleh and Dr. Leila Mohammad, the dentists behind NUV in Khan Yunis, Gaza.",
 };
 
 const TEAM = [
   {
-    name: "Dr. Ayman Saleh (أيمن صالح)",
-    role: "Founder & General Dentist",
-    src: "/images/team-maya.webp",
-    bio: "Twenty years of family practice, with a soft spot for nervous first visits and a firmly unhurried chair. Trained at NYU, and still takes the emergency calls herself.",
+    name: "Dr. Ayman Saleh",
+    role: "Lead Dentist / Implantologist",
+    src: "/images/team-ayman.webp",
+    alt: "Dr. Ayman Saleh, lead dentist and implantologist at NUV",
+    bio: "Leads the practice and has spent twenty years restoring smiles, with a particular focus on implants and full-mouth rehabilitation. He still takes the emergency calls himself and has a soft spot for nervous first visits.",
   },
   {
-    name: "Dr. Jonah Reed",
-    role: "Restorative & Implant Dentistry",
-    src: "/images/team-jonah.webp",
-    bio: "Plans the rebuild before the first instrument comes out, and shows you the same images he works from. Particular about single-visit crowns and honest timelines.",
-  },
-  {
-    name: "Priya Nair",
-    role: "Lead Hygienist",
-    src: "/images/team-priya.webp",
-    bio: "Believes a cleaning should be a conversation, not a countdown. Ask her about the fluoride flavours, or which corner of the room has the best light.",
-  },
-  {
-    name: "Tomás Herrera",
-    role: "Practice Manager",
-    src: "/images/team-tomas.webp",
-    bio: "The person who answers the phone and remembers your name. Handles insurance, estimates and the diary, and will tell you plainly what something will cost.",
+    name: "Dr. Leila Mohammad",
+    role: "Orthodontist / Dentist",
+    src: "/images/team-leila.webp",
+    alt: "Dr. Leila Mohammad, orthodontist and dentist at NUV",
+    bio: "Plans alignment cases around the whole face rather than the arch alone, from clear aligners to fixed braces. She shows you the same scans she works from and is honest about how long a result will take.",
   },
 ];
 
@@ -57,14 +47,14 @@ export default function OurTeamPage() {
             <div className="row">
               <div className="col col-4">
                 <p className="paragraph-lg max-w-[24ch]">
-                  Four people, one room, and a shared dislike of being rushed.
+                  Two dentists, one room, and a shared dislike of being rushed.
                 </p>
               </div>
               <div className="col col-8">
                 <p className="paragraph-md max-w-[44ch]">
-                  Everyone here has chosen a smaller practice on purpose. That means
-                  fewer patients per day, longer appointments, and clinicians who know
-                  your history without opening a file.
+                  Both doctors chose a smaller practice on purpose. That means fewer
+                  patients per day, longer appointments, and clinicians who know your
+                  history without opening a file.
                 </p>
               </div>
             </div>
@@ -73,10 +63,10 @@ export default function OurTeamPage() {
               {TEAM.map((person) => (
                 <div key={person.name} className="col col-6">
                   <article className="team-card">
-                    <div className="media ratio-4x3 zoom-media">
+                    <div className="media ratio-3x4 zoom-media">
                       <Image
                         src={person.src}
-                        alt={person.name}
+                        alt={person.alt}
                         fill
                         sizes="(min-width: 992px) 50vw, 100vw"
                         className="object-cover"

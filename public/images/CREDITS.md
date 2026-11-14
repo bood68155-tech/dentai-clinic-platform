@@ -12,10 +12,8 @@ All photographs are used under the [Pexels license](https://www.pexels.com/licen
 | `blanket.webp` | Services | Treatment chair detail, 1500 × 1875 |
 | `couple.webp` | New Patients | Two patients, 2400 × 1600 |
 | `meadow.webp` | New Patients | Outdoor portrait, 1920 × 1079 |
-| `team-jonah.webp` | About, Our Team | Team portrait, 1080 × 1440 |
-| `team-maya.webp` | About, Our Team | Team portrait, 1080 × 1350 |
-| `team-priya.webp` | About, Our Team | Team portrait, 1600 × 2000 |
-| `team-tomas.webp` | Our Team | Team portrait, 1080 × 1350 |
+| `team-ayman.webp` | About, Our Team | Dr. Ayman Saleh portrait, 960 × 1200 |
+| `team-leila.webp` | About, Our Team | Dr. Leila Mohammad portrait, 960 × 1200 |
 | `instagram-1.webp` … `instagram-6.webp` | Home social strip | Square-cropped feed images, ~1080 × 1440 |
 | `chocolate.webp`, `pool-table.webp` | Spare | Held for future sections, not currently rendered |
 

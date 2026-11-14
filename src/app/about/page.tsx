@@ -18,22 +18,18 @@ export const metadata: Metadata = {
 
 const PEOPLE = [
   {
-    name: "Dr. Ayman Saleh (أيمن صالح)",
-    role: "Founder & General Dentist",
-    src: "/images/team-maya.webp",
-    bio: "Twenty years of family practice, with a soft spot for nervous first visits and a firmly unhurried chair.",
+    name: "Dr. Ayman Saleh",
+    role: "Lead Dentist / Implantologist",
+    src: "/images/team-ayman.webp",
+    alt: "Dr. Ayman Saleh, lead dentist and implantologist at NUV",
+    bio: "Twenty years of family practice and implant work, with a soft spot for nervous first visits and a firmly unhurried chair.",
   },
   {
-    name: "Dr. Jonah Reed",
-    role: "Restorative & Implant Dentistry",
-    src: "/images/team-jonah.webp",
-    bio: "Plans the rebuild before the first instrument comes out, and shows you the same images he works from.",
-  },
-  {
-    name: "Priya Nair",
-    role: "Lead Hygienist",
-    src: "/images/team-priya.webp",
-    bio: "Believes a cleaning should be a conversation, not a countdown. Ask her about the fluoride flavours.",
+    name: "Dr. Leila Mohammad",
+    role: "Orthodontist / Dentist",
+    src: "/images/team-leila.webp",
+    alt: "Dr. Leila Mohammad, orthodontist and dentist at NUV",
+    bio: "Plans alignment around the whole face, from clear aligners to fixed braces, and shows you the same scans she works from.",
   },
 ];
 
@@ -177,15 +173,15 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <Carousel label="Our team" three>
+            <Carousel label="Our team">
               {PEOPLE.map((person) => (
                 <article key={person.name} className="team-card">
                   <div className="media ratio-3x4 zoom-media">
                     <Image
                       src={person.src}
-                      alt={person.name}
+                      alt={person.alt}
                       fill
-                      sizes="(min-width: 992px) 33vw, 90vw"
+                      sizes="(min-width: 992px) 50vw, 90vw"
                       className="object-cover"
                     />
                   </div>
